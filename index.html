@@ -1,208 +1,366 @@
-<!DOCTYPE html>
-<html>
-<title>Scott McDowell's Portfolio</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Raleway", sans-serif}
-</style>
-<body class="w3-light-grey w3-content" style="max-width:1600px">
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>James Scott McDowell — Portfolio</title>
+  <meta name="description" content="Creative web developer: interactive UI, SVG/CSS animation, Three.js/WebGL." />
 
-<!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
-  <div class="w3-container">
-    <a href="#" onclick="w3_close()" class="w3-hide-large w3-right w3-jumbo w3-padding w3-hover-grey" title="close menu">
-      <i class="fa fa-remove"></i>
-    </a>
-    <a href="https://github.com/whetstone11"><img src="css/images/avatar.png" style="width:45%;" class="w3-round"></a><br><br>
-    <h4><b>PORTFOLIO</b></h4>
-  </div>
-  <div class="w3-bar-block">
-    <a href="#portfolio" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-text-teal"><i class="fa fa-th-large fa-fw w3-margin-right"></i>PORTFOLIO</a> 
-    <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-user fa-fw w3-margin-right"></i>ABOUT</a> 
-    <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button w3-padding"><i class="fa fa-envelope fa-fw w3-margin-right"></i>CONTACT</a>
-  </div>
-</nav>
+  <style>
+    :root{
+      --bg: #000000;
+      --card: #0a0a0a;
+      --card2: #070707;
+      --line: #141414;
+      --text: #eaeaea;
+      --muted: #b8b8b8;
+      --neon: #39ff14;
 
-<!-- Overlay effect when opening sidebar on small screens -->
-<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+      --radius: 16px;
+      --pad: 18px;
+      --shadow: 0 20px 70px rgba(0,0,0,.70);
 
-<!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px">
+      /* Swing clearance: make the "safe zone" bigger than the animation travel */
+      --swing-clear: 64px;
+    }
 
-  <!-- Header -->
-  <header id="portfolio">
-    <a href="#"><img src="css/images/avatar.png" style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
-    <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()"><i class="fa fa-bars"></i></span>
-    <div class="w3-container">
-    <h1><b>James Scott McDowell</b></h1>
-    <div class="w3-section w3-bottombar w3-padding-16">
-      <table>
-        <tr>
-          <td><i class="fa fa-diamond"></i><span style="margin-right:1.6vw;margin-left:0.5vw;">Design</span></td><td><i class="fa fa-paint-brush"></i><span style="margin-right:2vw;margin-left:0.5vw;">Art</span></td><td><i class="fa fa-code"></i><span style="margin-left:0.5vw;">Dev</span></td>
-        </tr>
-      </table>
-    </div>
-    </div>
-  </header>
-  
-  <!-- First Photo Grid-->
-  <div class="w3-row-padding">
-      <div class="w3-third w3-container w3-margin-bottom">
-        <a href="https://radmancer.github.io/rad_lab_logo/index.html"><img src="css/images/rad_lab.png" style="object-fit:cover;object-position:0% 50%;width:100%;height:300px;" alt="Rad Lab Logo." style="object-fit:cover;object-position:50% 0%;width:100%;height:300px;" style="width:100%" class="w3-hover-opacity"></a>
-        <div class="w3-container w3-white">
-          <p><b>"Rad Lab Logo"</b></p>
-          <p>A logo for my independent robotics research practice. Written with the CSS Grid technique.</p>
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+
+    body{
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
+
+    .void{
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1200px 800px at 25% 15%, rgba(57,255,20,.06), transparent 60%),
+        radial-gradient(900px 700px at 75% 85%, rgba(57,255,20,.04), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: .55;
+    }
+
+    .wrap{
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 46px 18px 90px;
+    }
+
+    header{
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 34px;
+    }
+
+    .title h1{
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      letter-spacing: .2px;
+    }
+
+    .title p{
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 60ch;
+    }
+
+    .toplinks{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-start;
+      margin-top: 12px;
+    }
+
+    .chip{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .chip:hover{
+      transform: translateY(-1px);
+      border-color: rgba(57,255,20,.45);
+      background: rgba(57,255,20,.06);
+    }
+
+    .sig{
+      width: 88px;
+      height: 88px;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,.55));
+      opacity: .92;
+      transform: rotate(-8deg);
+    }
+
+    /* GRID: 2 columns on desktop, with big spacing */
+    .grid{
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--swing-clear);     /* BIG gap so swing doesn't collide */
+      margin-top: 28px;
+      padding: 8px;               /* extra breathing room at edges */
+    }
+
+    /* CARD STACK: wider-than-tall (SS-card-ish) */
+    .stack{
+      position: relative;
+      border-radius: var(--radius);
+      isolation: isolate;
+      aspect-ratio: 1.7 / 1;      /* ≈ credit/SS-card vibe */
+      min-height: 180px;          /* prevents too-short on narrow columns */
+    }
+
+    /* BACK CARD (hinged hover swing) */
+    .backcard{
+      position: absolute;
+      inset: 0;
+      background: var(--neon);
+      border-radius: var(--radius);
+      z-index: 0;
+      opacity: .92;
+      box-shadow:
+        0 0 0 1px rgba(57,255,20,.08),
+        0 30px 90px rgba(57,255,20,.12);
+
+      /* DEFAULT: directly behind */
+      transform: rotate(0deg) translate(0,0);
+
+      /* invisible axle near top-left */
+      transform-origin: 10% 8%;
+
+      transition: transform 520ms cubic-bezier(.18,.9,.2,1);
+    }
+
+    .stack:hover .backcard{
+      transform: rotate(-7deg) translate(12px, 12px);
+    }
+
+    /* FRONT CARD */
+    .frontcard{
+      position: relative;
+      z-index: 1;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: var(--pad);
+      height: 100%;               /* match the stack aspect ratio */
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform .18s ease, border-color .18s ease;
+    }
+
+    .stack:hover .frontcard{
+      transform: translateY(-3px);
+      border-color: rgba(57,255,20,.35);
+    }
+
+    .proj h2{
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    .proj p{
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      max-width: 60ch;
+    }
+
+    .links{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .link{
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.02);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: border-color .15s ease, background .15s ease, transform .15s ease;
+    }
+
+    .link:hover{
+      border-color: rgba(57,255,20,.45);
+      background: rgba(57,255,20,.06);
+      transform: translateY(-1px);
+    }
+
+    footer{
+      margin-top: 64px;
+      color: #9a9a9a;
+      border-top: 1px solid #0f0f0f;
+      padding-top: 16px;
+      font-size: 13px;
+    }
+
+    a:focus-visible{
+      outline: 2px solid rgba(57,255,20,.7);
+      outline-offset: 3px;
+      border-radius: 10px;
+    }
+
+    /* Tablet: still 2 columns, but tighter than desktop */
+    @media (max-width: 900px){
+      .grid{
+        gap: 40px;
+        padding: 0;
+      }
+      .stack{
+        aspect-ratio: 1.65 / 1;
+        min-height: 170px;
+      }
+    }
+
+    /* Phone mode: stack vertically (single column) */
+    @media (max-width: 640px){
+      .wrap{
+        padding: 34px 16px 80px;
+      }
+
+      header{
+        grid-template-columns: 1fr;
+      }
+
+      .sig{
+        justify-self: start;
+      }
+
+      .grid{
+        grid-template-columns: 1fr;
+        gap: 34px; /* still roomy */
+        padding: 0;
+      }
+
+      .stack{
+        aspect-ratio: 1.6 / 1;
+        min-height: 170px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .backcard, .frontcard{ transition: none; }
+      .stack:hover .backcard{ transform: rotate(0deg) translate(0,0); }
+      .stack:hover .frontcard{ transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="void" aria-hidden="true"></div>
+
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <h1>James Scott McDowell</h1>
+        <p>Creative web developer — interactive UI, SVG/CSS animation, Three.js/WebGL.</p>
+
+        <div class="toplinks">
+          <a class="chip" href="mailto:mcdowellj87@gmail.com">mcdowellj87@gmail.com</a>
+          <a class="chip" href="https://github.com/mcdowellj87" target="_blank" rel="noreferrer">GitHub</a>
         </div>
       </div>
-      <div class="w3-third w3-container">
-      <a href="https://radmancer.github.io/old_earth_2148/old_earth_2148.html"><img src="css/images/old_earth_2148.gif" alt="Render by Accretion Tool" style="object-fit:cover;object-position:50% 80%;width:100%;height:300px;" class="w3-hover-opacity"></a>
-      <div class="w3-container w3-white">
-        <p><b>"Old Earth 2148"</b></p>
-        <p>A visual narritive on the future of Earth, partially inspired by Olaf Stapledon's <a href="https://en.wikipedia.org/wiki/Last_and_First_Men">Last and First Men</a>. It depicts a future similar to the movie: Water World.</p>
-      </div>
-    </div>
-    <div class="w3-third w3-container w3-margin-bottom">
-      <a href="https://www.singularitydating.com"><img src="css/images/singularity_preview.png" alt="Singularity Dating Website" style="object-fit:cover;object-position:50% 25%;width:100%;height:300px;" class="w3-hover-opacity"></a>
-      <div class="w3-container w3-white">
-        <p><b>Singularity Dating App</b></p>
-        <p><a href="https://www.singularitydating.com">singularitydating.com</a><br>My friend's parody dating service that looks and feels like Tinder. I designed the entire layout and about 90% of the graphics. (please view this site on a mobile phone)</p>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Second Photo Grid-->
-  <div class="w3-row-padding">
-    <div class="w3-third w3-container">
-      <a href="https://radmancer.github.io/svg_mancer/svg_mancer.html"><img src="css/images/katie_demo.png" alt="Drawing of Katie" style="object-fit:cover;object-position:50% 50%;width:100%;height:300px;" class="w3-hover-opacity"></a>
-      <div class="w3-container w3-white">
-        <p><b>SVG Mancer</b></p>
-        <p>An <a href="https://radmancer.github.io/svg_mancer/svg_mancer.html">online SVG editor</a> for web graphics and art in general. A showcase on the power of jQuery and its ability to easily handle SVG elements.</p></p>
-      </div>
-    </div>
-    <div class="w3-third w3-container w3-margin-bottom">
-      <a href="https://www.dropbox.com/s/loi544axtwvdeo3/herzog.mp4?dl=0"><img src="css/images/herzog.jpg" style="object-fit:cover;object-position:0% 60%;width:100%;height:300px;" alt="Herzog: A William Gibson Inspired Robotic Hand" style="object-fit:cover;object-position:50% 0%;width:100%;height:300px;" style="width:100%" class="w3-hover-opacity"></a>
-      <div class="w3-container w3-white">
-        <p><b>"Herzog"</b></p>
-        <p> A robotic sculpture inspired by William Gibson's <a href="https://en.wikipedia.org/wiki/Neuromancer">Neuromancer</a>.</p>
-      </div>
-    </div>
-    <div class="w3-third w3-container w3-margin-bottom">
-      <a href="https://radmancer.github.io/rad_3d_editor/display.html"><img src="css/images/hand.png" alt="Render by Accretion Tool" style="object-fit:cover;object-position:50% 80%;width:100%;height:300px;" class="w3-hover-opacity"></a>
-      <div class="w3-container w3-white">
-        <p><b>R.A.D. 3D Editor</b></p>
-        <p><a href="https://radmancer.github.io/rad_3d_editor/display.html">R.A.D. 3D Editor</a>: A showcase on the power of CSS3 transformations and Vanilla JS.</p></p>
-      </div>
-    </div>
-  </div>
 
-  <!-- Third Photo Grid-->
-  <div class="w3-row-padding">
-    <div class="w3-third w3-container w3-margin-bottom">
-        <img src="css/images/dry_palms.jpg" alt="Dry Palms: A low polygon art rendering" style="width:100%">
-        <div class="w3-container w3-white">
-          <p><b>"Dry Palms"</b></p>
-          <p>A low polygon art rendering created with R.A.D. 3D Editor and Blender.org
-          <br>Inspired by Seapunk artwork.</p>
+      <img class="sig" src="Signature.png" alt="Signature mark" />
+    </header>
+
+    <section>
+      <div class="grid">
+
+        <div class="stack">
+          <div class="backcard" aria-hidden="true"></div>
+          <div class="frontcard proj">
+            <div>
+              <h2>SingularityDating.com — Viral Satirical App</h2>
+              <p>Viral satirical dating platform featured on People.com. Built mobile-first (best viewed on a phone).</p>
+            </div>
+            <div class="links">
+              <a class="link" href="https://www.singularitydating.com" target="_blank" rel="noreferrer">Live</a>
+              <a class="link" href="https://people.com/human-interest/singularity-dating-app-only-one-man-allowed/" target="_blank" rel="noreferrer">Press</a>
+              <a class="link" href="https://github.com/mcdowellj87/singularitydating" target="_blank" rel="noreferrer">Code</a>
+            </div>
+          </div>
         </div>
+
+        <div class="stack">
+          <div class="backcard" aria-hidden="true"></div>
+          <div class="frontcard proj">
+            <div>
+              <h2>Drury Village — Three.js Prototype</h2>
+              <p>Browser-based 3D prototype exploring atmosphere, motion, and interaction using Three.js/WebGL.</p>
+            </div>
+            <div class="links">
+              <a class="link" href="https://mcdowellj87.github.io/drury_village/" target="_blank" rel="noreferrer">Live</a>
+              <a class="link" href="https://github.com/mcdowellj87/drury_village" target="_blank" rel="noreferrer">Code</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="backcard" aria-hidden="true"></div>
+          <div class="frontcard proj">
+            <div>
+              <h2>MyLittleGoblin — Game Jam Experiment</h2>
+              <p>Interactive web toy: you type, the goblin reacts — using automated tone and toxicity scoring to drive feedback.</p>
+            </div>
+            <div class="links">
+              <a class="link" href="https://mcdowellj87.github.io/MyLittleGoblin/mlg26.html" target="_blank" rel="noreferrer">Live</a>
+              <a class="link" href="https://github.com/mcdowellj87/MyLittleGoblin" target="_blank" rel="noreferrer">Code</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="backcard" aria-hidden="true"></div>
+          <div class="frontcard proj">
+            <div>
+              <h2>Photoss — Distributed Photogrammetry Capture</h2>
+              <p>Prototype photogrammetry booth built from 50 repurposed Android phones running a Linux shell, capturing synchronized photo sets for 3D reconstruction.</p>
+            </div>
+            <div class="links">
+              <a class="link" href="https://github.com/mcdowellj87/photoss" target="_blank" rel="noreferrer">Code</a>
+              <a class="link" href="https://www.erectdesign.com/#h.5a2e4cd6ad79dd0b_3" target="_blank" rel="noreferrer" title="Scrolls to the Photoss section">Project write-up</a>
+            </div>
+          </div>
+        </div>
+
       </div>
+    </section>
+
+    <footer>
+      <div>© <span id="y"></span> James Scott McDowell — Wisdom can come from unexpected places.</div>
+    </footer>
   </div>
 
-  <!-- Images of Me -->
-  <div class="w3-row-padding w3-padding-16" id="about">
-    <div class="w3-col m6">
-      <img src="css/images/lecture1.jpg" alt="Robotics Lecture 1" style="width:100%">
-    </div>
-    <div class="w3-col m6">
-      <img src="css/images/lecture2.jpg" alt="Robotics Lecture 1" style="width:100%">
-    </div>
-  </div>
-
-  <div class="w3-container w3-padding-large" style="margin-bottom:32px">
-    <h4><b>About Me</b></h4>
-    <p>"He is the definition of an artist and a maker who uses his technical skills to quickly iterate and produce experiments around robotics. He has created a number of robot hands, an augmented cyborg eye, and a diy 3d scanner. He will show off his array of past projects and the vision behind why he creates this sub-future.
-        It's part retro, part future, part cyber, part punk." - <a href="https://www.facebook.com/events/1415307591895751/">Paul Chin Jr. on Popup Robots</a></p>
-    <p>In addition to Paul's words, I seek to make every technical endeavor, including web apps, an artistic endeavor as well as an engineering marvel.<br>It takes a ton of work to make each creation both technically and artistically sound, but it's work that's rewarding and well-worth the effort to satisfy myself, and my clientele.</p>
-    <hr>
-    <h4>Technical Skills</h4>
-    <!-- Progress bars / Skills -->
-    <p>HTML</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-dark-grey w3-padding w3-center" style="width:100%">100%</div>
-    </div>
-    <p>JavaScript</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-dark-grey w3-padding w3-center" style="width:100%">100%</div>
-    </div>
-    <p>CSS</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-dark-grey w3-padding w3-center" style="width:100%">100%</div>
-    </div>
-    <p>Web Design</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-dark-grey w3-padding w3-center" style="width:85%">85%</div>
-    </div>
-    <p>Image Editing</p>
-    <div class="w3-grey">
-      <div class="w3-container w3-dark-grey w3-padding w3-center" style="width:80%">80%</div>
-    </div>
-    <p>
-      <button class="w3-button w3-dark-grey w3-padding-large w3-margin-top w3-margin-bottom" onclick="window.location='documents/james_mcdowell_resume.pdf';">
-        <i class="fa fa-download w3-margin-right"></i>Download Resume
-      </button>
-    </p>
-    <hr>
-  </div>
-  
-  <!-- Contact Section -->
-  <div class="w3-container w3-padding-large w3-grey">
-    <h4 id="contact"><b>Contact Me</b></h4>
-    <div class="w3-row-padding w3-center w3-padding-24" style="margin:0 -16px">
-      <div class="w3-third w3-dark-grey">
-        <p><i class="fa fa-envelope w3-xxlarge w3-text-light-grey"></i></p>
-        <p>mcdowellj87@gmail.com</p>
-      </div>
-      <div class="w3-third w3-teal">
-        <p><i class="fa fa-map-marker w3-xxlarge w3-text-light-grey"></i></p>
-        <p>Apex, NC</p>
-      </div>
-      <div class="w3-third w3-dark-grey">
-        <p><i class="fa fa-phone w3-xxlarge w3-text-light-grey"></i></p>
-        <p>(919) 971-4894</p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="w3-container w3-padding-32 w3-dark-grey">
-  <div class="w3-row-padding">
-    <div>
-      <h3>Thanks for reading.</h3>
-      <img style="margin-left:3vw;" src="css/images/peace.png" />
-    </div>
-  </div>
-  </footer>
-  
-  <div class="w3-black w3-center w3-padding-24"></div>
-
-<!-- End page content -->
-</div>
-
-<script>
-// Script to open and close sidebar
-function w3_open() {
-    document.getElementById("mySidebar").style.display = "block";
-    document.getElementById("myOverlay").style.display = "block";
-}
- 
-function w3_close() {
-    document.getElementById("mySidebar").style.display = "none";
-    document.getElementById("myOverlay").style.display = "none";
-}
-</script>
-
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+  </script>
 </body>
 </html>
