@@ -19,6 +19,9 @@
 
   --radius:16px;
   --shadow:0 22px 60px rgba(0,0,0,.75);
+
+  /* GLOBAL KNOB: swingout card opacity (ripples untouched) */
+  --backcardOpacity: 0.20;
 }
 
 /* Reset */
@@ -112,14 +115,9 @@ header p{
 /* CARD STACK (LOCKED GEOMETRY) */
 .stack{
   position:relative;
-
-  /* Golden ratio is NON-NEGOTIABLE */
   aspect-ratio:1 / 1.618;
-
-  /* ~33% smaller than before */
   max-width:280px;
   width:100%;
-
   margin:0 auto;
 }
 
@@ -134,8 +132,12 @@ header p{
   box-shadow:
     0 0 0 1px rgba(57,255,20,.12),
     0 26px 70px rgba(57,255,20,.18);
+
+  opacity: var(--backcardOpacity);
+
   transform-origin:12% 9%;
   transition:transform .55s cubic-bezier(.18,.9,.2,1);
+  overflow:hidden; /* clip oversized ripples */
 }
 
 .stack:hover .backcard{
@@ -154,16 +156,11 @@ header p{
     linear-gradient(180deg, var(--card), var(--card2));
 
   display:grid;
-  grid-template-rows:
-    auto   /* header */
-    auto   /* hero */
-    1fr    /* text (scrolls) */
-    auto;  /* actions */
-
+  grid-template-rows:auto auto 1fr auto;
   padding:12px;
   gap:10px;
 
-  overflow:hidden; /* NOTHING can expand card */
+  overflow:hidden;
   transition:.18s;
 }
 
@@ -182,12 +179,7 @@ header p{
   border:1px solid #101010;
   background:rgba(255,255,255,.03);
 }
-
-.cardhead h2{
-  margin:0;
-  font-size:14px;
-  line-height:1.2;
-}
+.cardhead h2{ margin:0; font-size:14px; line-height:1.2; }
 
 .tag{
   font-size:11px;
@@ -209,20 +201,17 @@ header p{
   place-items:center;
   font-size:12px;
   color:rgba(234,234,234,.55);
-
-  overflow:hidden; /* <-- IMPORTANT: clip oversized images */
+  overflow:hidden;
 }
-
-/* <-- IMPORTANT: force the image to fit and stay centered */
 .hero img{
   width:100%;
   height:100%;
   display:block;
-  object-fit:contain;   /* shows whole image, no cropping */
+  object-fit:contain;
   object-position:center;
 }
 
-/* Text block (INTERNAL SCROLL ONLY) */
+/* Text block */
 .text{
   border-radius:12px;
   border:1px solid #121212;
@@ -233,11 +222,8 @@ header p{
   overflow:auto;
 }
 
-/* Button stack */
-.actions{
-  display:grid;
-  gap:8px;
-}
+/* Actions */
+.actions{ display:grid; gap:8px; }
 
 .action{
   display:flex;
@@ -252,12 +238,7 @@ header p{
   font-size:13px;
   transition:.15s;
 }
-
-.action small{
-  font-size:11px;
-  color:rgba(234,234,234,.6);
-}
-
+.action small{ font-size:11px; color:rgba(234,234,234,.6); }
 .action:hover{
   border-color:rgba(57,255,20,.45);
   background:rgba(57,255,20,.06);
@@ -282,6 +263,44 @@ footer{
 /* Reduced motion */
 @media (prefers-reduced-motion:reduce){
   .backcard,.card{transition:none}
+}
+
+/* =========================================================
+   BLACK RIPPLE ARCS (NO OPACITY — PURE BLACK STROKES)
+   Multidirectional feel: spawn outside right, outside bottom,
+   or near corners (top-right / bottom-right).
+   ========================================================= */
+.backcard .ripple{
+  position:absolute;
+  left:var(--x);
+  top:var(--y);
+  width:var(--sz);
+  height:var(--sz);
+  border-radius:999px;
+  background:transparent;
+
+  border:var(--bw) solid #000; /* PURE BLACK — no alpha */
+  mix-blend-mode:multiply;
+  filter:blur(.15px);
+
+  transform:translate(-50%,-50%) scale(.72);
+  animation:rippleArc var(--dur) ease-out forwards;
+  pointer-events:none;
+}
+
+@keyframes rippleArc{
+  0%{
+    transform:translate(-50%,-50%) scale(.72);
+    border-width:var(--bw);
+  }
+  100%{
+    transform:translate(-50%,-50%) scale(1.15);
+    border-width:0px; /* vanish by thinning, not opacity */
+  }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .backcard .ripple{ display:none !important; }
 }
 </style>
 </head>
@@ -315,8 +334,7 @@ footer{
       <div class="tag">Viral App</div>
     </div>
     <div class="hero">
-      <img src="css/images/1.jpg"
-       alt="SingularityDating — satirical mobile dating interface screenshot">
+      <img src="css/images/1.jpg" alt="SingularityDating — satirical mobile dating interface screenshot">
     </div>
     <div class="text">
       Viral satirical dating platform featured on People.com. Built mobile-first with a sharp comedic premise.
@@ -339,13 +357,37 @@ footer{
   <div class="backcard"></div>
   <article class="card">
     <div class="cardhead">
+      <h2>MegaFuture 232</h2>
+      <div class="tag">In Progress</div>
+    </div>
+    <div class="hero">
+      <img src="css/images/megafuture.png" alt="MegaFuture — stylized WebGL world and character study">
+    </div>
+    <div class="text">
+      Ongoing original project exploring stylized worldbuilding, character-driven spaces,
+      and cohesive visual language across 2D illustration and 3D WebGL environments.
+    </div>
+    <div class="actions">
+      <a class="action" href="https://mcdowellj87.github.io/MegaFuture232/" target="_blank">
+        <span>Live</span><small>demo</small>
+      </a>
+      <a class="action" href="https://github.com/mcdowellj87/MegaFuture232" target="_blank">
+        <span>Code</span><small>GitHub</small>
+      </a>
+    </div>
+  </article>
+</div>
+
+<div class="stack">
+  <div class="backcard"></div>
+  <article class="card">
+    <div class="cardhead">
       <h2>Drury Village</h2>
       <div class="tag">Three.js</div>
     </div>
     <div class="hero">
-      <img src="css/images/muffin_man.png"
-       alt="Drury Village — stylized 3D character render">
-      </div>
+      <img src="css/images/muffin_man.png" alt="Drury Village — stylized 3D character render">
+    </div>
     <div class="text">
       Browser-based 3D prototype exploring atmosphere, motion, and interaction using WebGL.
     </div>
@@ -368,8 +410,7 @@ footer{
       <div class="tag">Game Jam</div>
     </div>
     <div class="hero">
-      <img src="css/images/krobb.png"
-       alt="MyLittleGoblin — goblin character render">
+      <img src="css/images/krobb.png" alt="MyLittleGoblin — goblin character render">
     </div>
     <div class="text">
       Interactive web toy where player input dynamically drives character response through tone analysis.
@@ -393,8 +434,7 @@ footer{
       <div class="tag">Hardware</div>
     </div>
     <div class="hero">
-    <img src="css/images/phones.png"
-       alt="Photoss — distributed photogrammetry rig with multiple smartphones">
+      <img src="css/images/phones.png" alt="Photoss — distributed photogrammetry rig with multiple smartphones">
     </div>
     <div class="text">
       Distributed photogrammetry booth built from 50 repurposed Android phones capturing synchronized datasets.
@@ -410,46 +450,128 @@ footer{
   </article>
 </div>
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>MegaFuture 232</h2>
-      <div class="tag">In Progress</div>
-    </div>
-
-    <div class="hero">
-      <img src="css/images/megafuture.png"
-           alt="MegaFuture — stylized WebGL world and character study">
-    </div>
-
-    <div class="text">
-      Ongoing original project exploring stylized worldbuilding, character-driven spaces,
-      and cohesive visual language across 2D illustration and 3D WebGL environments.
-    </div>
-
-    <div class="actions">
-      <a class="action" href="https://mcdowellj87.github.io/MegaFuture232/" target="_blank">
-        <span>Live</span><small>demo</small>
-      </a>
-      <a class="action" href="https://github.com/mcdowellj87/MegaFuture232" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-    </div>
-  </article>
-</div>
-
 </section>
 
 <footer>
   © <span id="y"></span> James Scott McDowell<br>
-  <small><em>I’m a Creative Technologist. I design systems where art, technology, and meaning intersect.</em></small>
+  <small>
+    <em>“The walls between art and engineering exist only in our minds.” — Theo Jansen</em>
+  </small>
 </footer>
 
 </div>
 
 <script>
 document.getElementById("y").textContent = new Date().getFullYear();
+
+/**
+ * Black ripple arcs on each backcard.
+ * - No opacity/alpha anywhere (pure black #000 stroke)
+ * - Floaty cadence + multi-directional spawn:
+ *   outside RIGHT, outside BOTTOM, TOP-RIGHT corner, BOTTOM-RIGHT corner.
+ */
+(function attachRippleArcs(){
+  const rand = (a,b)=> a + Math.random()*(b-a);
+  const pick = (arr)=> arr[(Math.random()*arr.length)|0];
+
+  // Floaty tuning
+  const RATE_MS = 720;
+  const MIN_SIZE = 260;
+  const MAX_SIZE = 720;
+  const MIN_DUR  = 1500;
+  const MAX_DUR  = 2900;
+  const MIN_BW   = 2;
+  const MAX_BW   = 8;
+  const MAX_ALIVE = 5;
+
+  document.querySelectorAll(".stack").forEach(stack => {
+    const back = stack.querySelector(".backcard");
+    if(!back) return;
+
+    let timer = null;
+
+    function pickEpicenter(rect){
+      const w = rect.width;
+      const h = rect.height;
+
+      // how far "outside" the surface we allow the epicenter to be
+      const outX = rand(Math.max(10, w*0.05), w*0.25);
+      const outY = rand(Math.max(10, h*0.05), h*0.25);
+
+      const mode = pick(["RIGHT", "BOTTOM", "BR", "TR"]);
+
+      // x/y are in backcard-local pixels (0..w, 0..h is inside)
+      if(mode === "RIGHT"){
+        return {
+          x: w + outX,
+          y: rand(-h*0.15, h*1.15)   // allow above/below a bit for more direction
+        };
+      }
+
+      if(mode === "BOTTOM"){
+        return {
+          x: rand(-w*0.15, w*1.15),  // allow slight left/right overhang
+          y: h + outY
+        };
+      }
+
+      if(mode === "TR"){
+        return {
+          x: w + outX,
+          y: -outY
+        };
+      }
+
+      // "BR"
+      return {
+        x: w + outX,
+        y: h + outY
+      };
+    }
+
+    const spawn = () => {
+      const r = document.createElement("span");
+      r.className = "ripple";
+
+      const rect = back.getBoundingClientRect();
+      const epic = pickEpicenter(rect);
+
+      const sz  = rand(MIN_SIZE, MAX_SIZE);
+      const dur = rand(MIN_DUR, MAX_DUR);
+      const bw  = Math.round(rand(MIN_BW, MAX_BW));
+
+      r.style.setProperty("--x", `${epic.x}px`);
+      r.style.setProperty("--y", `${epic.y}px`);
+      r.style.setProperty("--sz", `${sz}px`);
+      r.style.setProperty("--dur", `${dur}ms`);
+      r.style.setProperty("--bw", `${bw}px`);
+
+      back.appendChild(r);
+
+      const alive = back.querySelectorAll(":scope > .ripple").length;
+      if(alive > MAX_ALIVE){
+        back.querySelector(":scope > .ripple")?.remove();
+      }
+
+      r.addEventListener("animationend", () => r.remove(), { once:true });
+    };
+
+    const start = () => {
+      if(timer) return;
+      spawn();
+      timer = setInterval(spawn, RATE_MS);
+    };
+
+    const stop = () => {
+      if(!timer) return;
+      clearInterval(timer);
+      timer = null;
+    };
+
+    stack.addEventListener("mouseenter", start);
+    stack.addEventListener("mouseleave", stop);
+  });
+})();
 </script>
 </body>
 </html>
