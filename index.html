@@ -21,7 +21,20 @@
   --shadow:0 22px 60px rgba(0,0,0,.75);
 
   /* GLOBAL KNOB: swingout card opacity (ripples untouched) */
-  --backcardOpacity: 0.20;
+  --backcardOpacity: 0.40;
+
+  /* OPTIONAL KNOBS (tighten text without scrollbars) */
+  --descFont: 12px;
+  --descLine: 1.35;
+  --descPad: 9px;
+
+  /* MOBILE SWING (subtle, doesn't mess layout) */
+  --mobileBackRotate: 4deg;
+  --mobileBackTX: 8px;
+  --mobileBackTY: 14px;
+
+  /* how close to center counts as "active" */
+  --mobileCenterBandPx: 160px;
 }
 
 /* Reset */
@@ -211,16 +224,21 @@ header p{
   object-position:center;
 }
 
-/* Text block */
+/* Text block (NO SCROLLBARS) */
 .text{
   border-radius:12px;
   border:1px solid #121212;
   background:rgba(0,0,0,.28);
-  padding:10px;
-  font-size:13px;
+
+  padding: var(--descPad);
+  font-size: var(--descFont);
+  line-height: var(--descLine);
   color:var(--muted);
-  overflow:auto;
+
+  overflow:hidden;
+  scrollbar-width:none;
 }
+.text::-webkit-scrollbar{ display:none; }
 
 /* Actions */
 .actions{ display:grid; gap:8px; }
@@ -266,6 +284,26 @@ footer{
 }
 
 /* =========================================================
+   MOBILE "CENTER TRIGGER" SWING
+   - On mobile, we add .m-active to stacks near viewport center.
+   - This transforms the backcard DOWN and slightly RIGHT.
+   - Desktop hover remains unchanged.
+   ========================================================= */
+@media (max-width:700px){
+  .stack:hover .backcard{ transform:none; } /* no hover dependency on touch */
+
+  .stack.m-active .backcard{
+    transform: rotate(var(--mobileBackRotate)) translate(var(--mobileBackTX), var(--mobileBackTY));
+  }
+
+  /* tiny lift stays subtle on mobile */
+  .stack.m-active .card{
+    transform: translateY(-2px);
+    border-color: rgba(57,255,20,.30);
+  }
+}
+
+/* =========================================================
    BLACK RIPPLE ARCS (NO OPACITY — PURE BLACK STROKES)
    Multidirectional feel: spawn outside right, outside bottom,
    or near corners (top-right / bottom-right).
@@ -301,6 +339,32 @@ footer{
 
 @media (prefers-reduced-motion:reduce){
   .backcard .ripple{ display:none !important; }
+}
+
+/* Mobile header refinement */
+@media (max-width:700px){
+  header{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+  }
+
+  .sig{
+    width:56px;          /* slightly smaller on mobile */
+    height:56px;
+    flex-shrink:0;       /* never squish the logo */
+    margin-top:2px;      /* optical alignment */
+  }
+
+  header > div{
+    flex:1;
+    min-width:0;         /* IMPORTANT: allows text wrapping */
+  }
+
+  h1{
+    line-height:1.15;
+    word-break:normal;
+  }
 }
 </style>
 </head>
@@ -469,108 +533,200 @@ document.getElementById("y").textContent = new Date().getFullYear();
  * - No opacity/alpha anywhere (pure black #000 stroke)
  * - Floaty cadence + multi-directional spawn:
  *   outside RIGHT, outside BOTTOM, TOP-RIGHT corner, BOTTOM-RIGHT corner.
+ *
+ * PLUS:
+ * - Mobile center trigger: stacks near viewport middle get .m-active
+ *   and also run ripples (since no hover).
  */
-(function attachRippleArcs(){
+(function(){
   const rand = (a,b)=> a + Math.random()*(b-a);
-  const pick = (arr)=> arr[(Math.random()*arr.length)|0];
+  const pick = (arr) => arr[(Math.random() * arr.length) | 0];
 
-  // Floaty tuning
-  const RATE_MS = 720;
+  // Floaty tuning (slower / dreamier)
+  const RATE_MS = 950;
   const MIN_SIZE = 260;
-  const MAX_SIZE = 720;
-  const MIN_DUR  = 1500;
-  const MAX_DUR  = 2900;
+  const MAX_SIZE = 760;
+  const MIN_DUR  = 1900;
+  const MAX_DUR  = 3600;
   const MIN_BW   = 2;
   const MAX_BW   = 8;
   const MAX_ALIVE = 5;
 
-  document.querySelectorAll(".stack").forEach(stack => {
-    const back = stack.querySelector(".backcard");
-    if(!back) return;
+  const stacks = Array.from(document.querySelectorAll(".stack"));
+  const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    let timer = null;
+  function isMobile(){
+    return window.matchMedia("(max-width: 700px)").matches;
+  }
 
-    function pickEpicenter(rect){
-      const w = rect.width;
-      const h = rect.height;
+  function getCenterBandPx(){
+    const v = getComputedStyle(document.documentElement).getPropertyValue("--mobileCenterBandPx").trim();
+    const n = parseFloat(v);
+    return Number.isFinite(n) ? n : 160;
+  }
 
-      // how far "outside" the surface we allow the epicenter to be
-      const outX = rand(Math.max(10, w*0.05), w*0.25);
-      const outY = rand(Math.max(10, h*0.05), h*0.25);
+  function pickEpicenter(rect){
+    const w = rect.width;
+    const h = rect.height;
 
-      const mode = pick(["RIGHT", "BOTTOM", "BR", "TR"]);
+    const outX = rand(Math.max(10, w*0.05), w*0.30);
+    const outY = rand(Math.max(10, h*0.05), h*0.30);
 
-      // x/y are in backcard-local pixels (0..w, 0..h is inside)
-      if(mode === "RIGHT"){
-        return {
-          x: w + outX,
-          y: rand(-h*0.15, h*1.15)   // allow above/below a bit for more direction
-        };
-      }
+    const mode = pick(["RIGHT", "BOTTOM", "BR", "TR", "R_CORNER", "B_CORNER"]);
 
-      if(mode === "BOTTOM"){
-        return {
-          x: rand(-w*0.15, w*1.15),  // allow slight left/right overhang
-          y: h + outY
-        };
-      }
+    if(mode === "RIGHT")  return { x: w + outX, y: rand(-h*0.15, h*1.15) };
+    if(mode === "BOTTOM") return { x: rand(-w*0.15, w*1.15), y: h + outY };
+    if(mode === "TR")     return { x: w + outX, y: -outY };
+    if(mode === "R_CORNER") return { x: w + outX, y: rand(0, h) };
+    if(mode === "B_CORNER") return { x: rand(0, w), y: h + outY };
+    return { x: w + outX, y: h + outY }; // BR
+  }
 
-      if(mode === "TR"){
-        return {
-          x: w + outX,
-          y: -outY
-        };
-      }
+  function spawnRipple(back){
+    const r = document.createElement("span");
+    r.className = "ripple";
 
-      // "BR"
-      return {
-        x: w + outX,
-        y: h + outY
-      };
+    const rect = back.getBoundingClientRect();
+    const epic = pickEpicenter(rect);
+
+    const sz  = rand(MIN_SIZE, MAX_SIZE);
+    const dur = rand(MIN_DUR, MAX_DUR);
+    const bw  = Math.round(rand(MIN_BW, MAX_BW));
+
+    r.style.setProperty("--x", `${epic.x}px`);
+    r.style.setProperty("--y", `${epic.y}px`);
+    r.style.setProperty("--sz", `${sz}px`);
+    r.style.setProperty("--dur", `${dur}ms`);
+    r.style.setProperty("--bw", `${bw}px`);
+
+    back.appendChild(r);
+
+    const alive = back.querySelectorAll(":scope > .ripple").length;
+    if(alive > MAX_ALIVE){
+      back.querySelector(":scope > .ripple")?.remove();
     }
 
-    const spawn = () => {
-      const r = document.createElement("span");
-      r.className = "ripple";
+    r.addEventListener("animationend", () => r.remove(), { once:true });
+  }
 
-      const rect = back.getBoundingClientRect();
-      const epic = pickEpicenter(rect);
+  // Desktop hover behavior (unchanged)
+  const desktopTimers = new WeakMap();
 
-      const sz  = rand(MIN_SIZE, MAX_SIZE);
-      const dur = rand(MIN_DUR, MAX_DUR);
-      const bw  = Math.round(rand(MIN_BW, MAX_BW));
+  function startDesktop(stack){
+    const back = stack.querySelector(".backcard");
+    if(!back) return;
+    if(desktopTimers.get(stack)) return;
 
-      r.style.setProperty("--x", `${epic.x}px`);
-      r.style.setProperty("--y", `${epic.y}px`);
-      r.style.setProperty("--sz", `${sz}px`);
-      r.style.setProperty("--dur", `${dur}ms`);
-      r.style.setProperty("--bw", `${bw}px`);
+    spawnRipple(back);
+    const t = setInterval(() => spawnRipple(back), RATE_MS);
+    desktopTimers.set(stack, t);
+  }
 
-      back.appendChild(r);
+  function stopDesktop(stack){
+    const t = desktopTimers.get(stack);
+    if(!t) return;
+    clearInterval(t);
+    desktopTimers.delete(stack);
+  }
 
-      const alive = back.querySelectorAll(":scope > .ripple").length;
-      if(alive > MAX_ALIVE){
-        back.querySelector(":scope > .ripple")?.remove();
+  // Mobile center trigger
+  let activeMobileStack = null;
+  let mobileTimer = null;
+
+  function setMobileActive(stack){
+    if(activeMobileStack === stack) return;
+
+    if(activeMobileStack){
+      activeMobileStack.classList.remove("m-active");
+    }
+    activeMobileStack = stack;
+
+    if(activeMobileStack){
+      activeMobileStack.classList.add("m-active");
+    }
+
+    // restart ripple interval to target the active stack
+    if(mobileTimer){
+      clearInterval(mobileTimer);
+      mobileTimer = null;
+    }
+
+    if(activeMobileStack){
+      const back = activeMobileStack.querySelector(".backcard");
+      if(back){
+        spawnRipple(back);
+        mobileTimer = setInterval(() => {
+          // if the active stack changed or got removed, stop
+          if(!activeMobileStack || !document.body.contains(activeMobileStack)){
+            clearInterval(mobileTimer);
+            mobileTimer = null;
+            return;
+          }
+          const b = activeMobileStack.querySelector(".backcard");
+          if(b) spawnRipple(b);
+        }, RATE_MS);
       }
+    }
+  }
 
-      r.addEventListener("animationend", () => r.remove(), { once:true });
-    };
+  function updateMobileActiveByCenter(){
+    if(!isMobile() || prefersReduce){
+      // ensure cleanup when leaving mobile
+      if(activeMobileStack) activeMobileStack.classList.remove("m-active");
+      activeMobileStack = null;
+      if(mobileTimer){ clearInterval(mobileTimer); mobileTimer = null; }
+      return;
+    }
 
-    const start = () => {
-      if(timer) return;
-      spawn();
-      timer = setInterval(spawn, RATE_MS);
-    };
+    const centerY = window.innerHeight * 0.5;
+    const band = getCenterBandPx();
 
-    const stop = () => {
-      if(!timer) return;
-      clearInterval(timer);
-      timer = null;
-    };
+    let best = null;
+    let bestDist = Infinity;
 
-    stack.addEventListener("mouseenter", start);
-    stack.addEventListener("mouseleave", stop);
+    for(const stack of stacks){
+      const r = stack.getBoundingClientRect();
+      const mid = r.top + r.height * 0.5;
+
+      // ignore if totally off-screen
+      if(r.bottom < 0 || r.top > window.innerHeight) continue;
+
+      const dist = Math.abs(mid - centerY);
+      if(dist < bestDist){
+        bestDist = dist;
+        best = stack;
+      }
+    }
+
+    // only activate if within band (prevents constant animation when far away)
+    if(best && bestDist <= band){
+      setMobileActive(best);
+    }else{
+      setMobileActive(null);
+    }
+  }
+
+  // Wire up desktop hover ripple intervals
+  stacks.forEach(stack => {
+    stack.addEventListener("mouseenter", () => { if(!isMobile() && !prefersReduce) startDesktop(stack); });
+    stack.addEventListener("mouseleave", () => { if(!isMobile()) stopDesktop(stack); });
   });
+
+  // Mobile: update active stack on scroll/resize
+  let raf = 0;
+  function onScrollResize(){
+    if(raf) return;
+    raf = requestAnimationFrame(() => {
+      raf = 0;
+      updateMobileActiveByCenter();
+    });
+  }
+
+  window.addEventListener("scroll", onScrollResize, { passive:true });
+  window.addEventListener("resize", onScrollResize);
+
+  // initial
+  updateMobileActiveByCenter();
 })();
 </script>
 </body>
