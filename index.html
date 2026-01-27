@@ -1,733 +1,790 @@
 <!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<title>James Scott McDowell — Portfolio</title>
-<meta name="description" content="Creative web developer: interactive UI, SVG/CSS animation, Three.js/WebGL." />
+  <title>James Scott McDowell — Portfolio</title>
+  <meta name="description" content="Creative web developer" />
 
-<style>
-:root{
-  --bg:#000;
-  --card:#0a0a0a;
-  --card2:#060606;
-  --line:#141414;
-  --text:#eaeaea;
-  --muted:#b8b8b8;
-  --neon:#39ff14;
+  <style>
+    :root {
+      --bg: #000;
+      --card: #0a0a0a;
+      --card2: #060606;
+      --line: #141414;
+      --text: #eaeaea;
+      --muted: #b8b8b8;
+      --neon: #39ff14;
 
-  --radius:16px;
-  --shadow:0 22px 60px rgba(0,0,0,.75);
+      --radius: 16px;
+      --shadow: 0 22px 60px rgba(0, 0, 0, .75);
 
-  /* GLOBAL KNOB: swingout card opacity (ripples untouched) */
-  --backcardOpacity: 0.40;
+      /* GLOBAL KNOB: swingout card opacity (ripples untouched) */
+      --backcardOpacity: 0.40;
 
-  /* OPTIONAL KNOBS (tighten text without scrollbars) */
-  --descFont: 12px;
-  --descLine: 1.35;
-  --descPad: 9px;
+      /* OPTIONAL KNOBS (tighten text without scrollbars) */
+      --descFont: 12px;
+      --descLine: 1.35;
+      --descPad: 9px;
 
-  /* MOBILE SWING (subtle, doesn't mess layout) */
-  --mobileBackRotate: 4deg;
-  --mobileBackTX: 8px;
-  --mobileBackTY: 14px;
+      /* MOBILE SWING (subtle, doesn't mess layout) */
+      --mobileBackRotate: 4deg;
+      --mobileBackTX: 8px;
+      --mobileBackTY: 14px;
 
-  /* how close to center counts as "active" */
-  --mobileCenterBandPx: 160px;
-}
+      /* how close to center counts as "active" */
+      --mobileCenterBandPx: 160px;
+    }
 
-/* Reset */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  line-height:1.45;
-  overflow-x:hidden;
-}
+    /* Reset */
+    * {
+      box-sizing: border-box
+    }
 
-/* Ambient void */
-.void{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(1200px 800px at 25% 15%, rgba(57,255,20,.06), transparent 60%),
-    radial-gradient(900px 700px at 75% 85%, rgba(57,255,20,.04), transparent 55%);
-  mix-blend-mode:screen;
-  opacity:.55;
-}
+    html,
+    body {
+      height: 100%
+    }
 
-/* Layout */
-.wrap{
-  max-width:900px;
-  margin:0 auto;
-  padding:42px 18px 80px;
-}
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      line-height: 1.45;
+      overflow-x: hidden;
+    }
 
-header{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:20px;
-  margin-bottom:34px;
-}
+    /* Ambient void */
+    .void {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(1200px 800px at 25% 15%, rgba(57, 255, 20, .06), transparent 60%),
+        radial-gradient(900px 700px at 75% 85%, rgba(57, 255, 20, .04), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: .55;
+    }
 
-h1{
-  margin:0;
-  font-size:clamp(26px,4vw,40px);
-}
+    /* Layout */
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 42px 18px 80px;
+    }
 
-header p{
-  margin:8px 0 0;
-  color:var(--muted);
-  max-width:60ch;
-}
+    header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 20px;
+      margin-bottom: 34px;
+    }
 
-.toplinks{
-  display:flex;
-  gap:10px;
-  margin-top:14px;
-  flex-wrap:wrap;
-}
+    h1 {
+      margin: 0;
+      font-size: clamp(26px, 4vw, 40px);
+    }
 
-.chip{
-  padding:8px 12px;
-  border-radius:999px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.02);
-  color:var(--text);
-  text-decoration:none;
-  font-size:14px;
-  transition:.15s;
-}
+    header p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      max-width: 60ch;
+    }
 
-.chip:hover{
-  border-color:rgba(57,255,20,.45);
-  background:rgba(57,255,20,.06);
-  transform:translateY(-1px);
-}
+    .toplinks {
+      display: flex;
+      gap: 10px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
 
-.sig{
-  width:78px;
-  height:78px;
-  object-fit:contain;
-  transform:rotate(-8deg);
-  opacity:.9;
-}
+    .chip {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .02);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: .15s;
+    }
 
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:36px;
-}
+    .chip:hover {
+      border-color: rgba(57, 255, 20, .45);
+      background: rgba(57, 255, 20, .06);
+      transform: translateY(-1px);
+    }
 
-/* CARD STACK (LOCKED GEOMETRY) */
-.stack{
-  position:relative;
-  aspect-ratio:1 / 1.618;
-  max-width:280px;
-  width:100%;
-  margin:0 auto;
-}
+    .sig {
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+      transform: rotate(-8deg);
+      opacity: .9;
+    }
 
-/* Swinging back card */
-.backcard{
-  position:absolute;
-  inset:0;
-  border-radius:18px;
-  background:
-    radial-gradient(700px 360px at 30% 10%, rgba(255,255,255,.14), transparent 60%),
-    linear-gradient(135deg, rgba(57,255,20,.95), rgba(57,255,20,.55));
-  box-shadow:
-    0 0 0 1px rgba(57,255,20,.12),
-    0 26px 70px rgba(57,255,20,.18);
+    /* GRID */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 36px;
+    }
 
-  opacity: var(--backcardOpacity);
+    /* CARD STACK (LOCKED GEOMETRY) */
+    .stack {
+      position: relative;
+      aspect-ratio: 1 / 1.618;
+      max-width: 280px;
+      width: 100%;
+      margin: 0 auto;
+    }
 
-  transform-origin:12% 9%;
-  transition:transform .55s cubic-bezier(.18,.9,.2,1);
-  overflow:hidden; /* clip oversized ripples */
-}
+    /* Swinging back card */
+    .backcard {
+      position: absolute;
+      inset: 0;
+      border-radius: 9px;
+      /* tighter corners (was 18px) */
+      background:
+        radial-gradient(700px 360px at 30% 10%, rgba(255, 255, 255, .14), transparent 60%),
+        linear-gradient(135deg, rgba(57, 255, 20, .95), rgba(57, 255, 20, .55));
+      box-shadow:
+        0 0 0 1px rgba(57, 255, 20, .12),
+        0 26px 70px rgba(57, 255, 20, .18);
 
-.stack:hover .backcard{
-  transform:rotate(-7deg) translate(12px,12px);
-}
+      opacity: var(--backcardOpacity);
 
-/* FRONT CARD (SEALED CONTAINER) */
-.card{
-  position:relative;
-  height:100%;
-  border-radius:16px;
-  border:1px solid var(--line);
-  box-shadow:var(--shadow);
-  background:
-    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,0)),
-    linear-gradient(180deg, var(--card), var(--card2));
+      transform-origin: 12% 9%;
+      transition: transform .55s cubic-bezier(.18, .9, .2, 1);
+      overflow: hidden;
+      /* clip oversized ripples */
+    }
 
-  display:grid;
-  grid-template-rows:auto auto 1fr auto;
-  padding:12px;
-  gap:10px;
+    .stack:hover .backcard {
+      transform: rotate(-7deg) translate(12px, 12px);
+    }
 
-  overflow:hidden;
-  transition:.18s;
-}
+    /* FRONT CARD (SEALED CONTAINER) */
+    .card {
+      position: relative;
+      height: 100%;
+      border-radius: 8px;
+      /* tighter corners (was 16px) */
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, .03), rgba(255, 255, 255, 0)),
+        linear-gradient(180deg, var(--card), var(--card2));
 
-.stack:hover .card{
-  transform:translateY(-3px);
-  border-color:rgba(57,255,20,.35);
-}
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      padding: 12px;
+      gap: 10px;
 
-/* Header */
-.cardhead{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px 10px;
-  border-radius:12px;
-  border:1px solid #101010;
-  background:rgba(255,255,255,.03);
-}
-.cardhead h2{ margin:0; font-size:14px; line-height:1.2; }
+      overflow: hidden;
+      transition: .18s;
+    }
 
-.tag{
-  font-size:11px;
-  color:var(--muted);
-  padding:4px 8px;
-  border-radius:999px;
-  border:1px solid #151515;
-}
+    .stack:hover .card {
+      transform: translateY(-3px);
+      border-color: var(--line);
+      /* no green highlight */
+    }
 
-/* Hero */
-.hero{
-  aspect-ratio:16 / 10;
-  border-radius:12px;
-  border:1px solid #121212;
-  background:
-    radial-gradient(520px 220px at 30% 10%, rgba(57,255,20,.10), transparent 55%),
-    linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-  display:grid;
-  place-items:center;
-  font-size:12px;
-  color:rgba(234,234,234,.55);
-  overflow:hidden;
-}
-.hero img{
-  width:100%;
-  height:100%;
-  display:block;
-  object-fit:contain;
-  object-position:center;
-}
+    /* Header */
+    .cardhead {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 6px;
+      /* tighter corners (was 12px) */
+      border: 1px solid #101010;
+      background: rgba(255, 255, 255, .03);
+    }
 
-/* Text block (NO SCROLLBARS) */
-.text{
-  border-radius:12px;
-  border:1px solid #121212;
-  background:rgba(0,0,0,.28);
+    .cardhead h2 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.2;
+    }
 
-  padding: var(--descPad);
-  font-size: var(--descFont);
-  line-height: var(--descLine);
-  color:var(--muted);
+    .tag {
+      font-size: 11px;
+      color: var(--muted);
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid #151515;
+    }
 
-  overflow:hidden;
-  scrollbar-width:none;
-}
-.text::-webkit-scrollbar{ display:none; }
+    /* Hero */
+    .hero {
+      aspect-ratio: 16 / 10;
+      border-radius: 6px;
+      /* tighter corners (was 12px) */
+      border: 1px solid #121212;
+      background:
+        radial-gradient(520px 220px at 30% 10%, rgba(57, 255, 20, .10), transparent 55%),
+        linear-gradient(180deg, rgba(255, 255, 255, .02), rgba(255, 255, 255, 0));
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      color: rgba(234, 234, 234, .55);
+      overflow: hidden;
+    }
 
-/* Actions */
-.actions{ display:grid; gap:8px; }
+    .hero img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      object-position: center;
+    }
 
-.action{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:8px 10px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.03);
-  color:var(--text);
-  text-decoration:none;
-  font-size:13px;
-  transition:.15s;
-}
-.action small{ font-size:11px; color:rgba(234,234,234,.6); }
-.action:hover{
-  border-color:rgba(57,255,20,.45);
-  background:rgba(57,255,20,.06);
-  transform:translateY(-1px);
-}
+    /* Text block (NO SCROLLBARS) */
+    .text {
+      border-radius: 6px;
+      /* tighter corners (was 12px) */
+      border: 1px solid #121212;
+      background: rgba(0, 0, 0, .28);
 
-/* Footer */
-footer{
-  margin-top:60px;
-  padding-top:16px;
-  border-top:1px solid #0f0f0f;
-  font-size:13px;
-  color:#9a9a9a;
-}
+      padding: var(--descPad);
+      font-size: var(--descFont);
+      line-height: var(--descLine);
+      color: var(--muted);
 
-/* Responsive */
-@media (max-width:700px){
-  header{grid-template-columns:1fr}
-  .grid{grid-template-columns:1fr}
-}
+      overflow: hidden;
+      scrollbar-width: none;
+    }
 
-/* Reduced motion */
-@media (prefers-reduced-motion:reduce){
-  .backcard,.card{transition:none}
-}
+    .text::-webkit-scrollbar {
+      display: none;
+    }
 
-/* =========================================================
-   MOBILE "CENTER TRIGGER" SWING
-   - On mobile, we add .m-active to stacks near viewport center.
-   - This transforms the backcard DOWN and slightly RIGHT.
-   - Desktop hover remains unchanged.
-   ========================================================= */
-@media (max-width:700px){
-  .stack:hover .backcard{ transform:none; } /* no hover dependency on touch */
+    /* Actions */
+    .actions {
+      display: grid;
+      gap: 8px;
+    }
 
-  .stack.m-active .backcard{
-    transform: rotate(var(--mobileBackRotate)) translate(var(--mobileBackTX), var(--mobileBackTY));
-  }
+    .action {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 5px;
+      /* tighter corners (was 10px) */
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, .03);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      transition: .15s;
+    }
 
-  /* tiny lift stays subtle on mobile */
-  .stack.m-active .card{
-    transform: translateY(-2px);
-    border-color: rgba(57,255,20,.30);
-  }
-}
+    .action small {
+      font-size: 11px;
+      color: rgba(234, 234, 234, .6);
+    }
 
-/* =========================================================
-   BLACK RIPPLE ARCS (NO OPACITY — PURE BLACK STROKES)
-   Multidirectional feel: spawn outside right, outside bottom,
-   or near corners (top-right / bottom-right).
-   ========================================================= */
-.backcard .ripple{
-  position:absolute;
-  left:var(--x);
-  top:var(--y);
-  width:var(--sz);
-  height:var(--sz);
-  border-radius:999px;
-  background:transparent;
+    .action:hover {
+      border-color: rgba(57, 255, 20, .45);
+      background: rgba(57, 255, 20, .06);
+      transform: translateY(-1px);
+    }
 
-  border:var(--bw) solid #000; /* PURE BLACK — no alpha */
-  mix-blend-mode:multiply;
-  filter:blur(.15px);
+    /* Footer */
+    footer {
+      margin-top: 60px;
+      padding-top: 16px;
+      border-top: 1px solid #0f0f0f;
+      font-size: 13px;
+      color: #9a9a9a;
+    }
 
-  transform:translate(-50%,-50%) scale(.72);
-  animation:rippleArc var(--dur) ease-out forwards;
-  pointer-events:none;
-}
+    /* Responsive */
+    @media (max-width:700px) {
+      header {
+        grid-template-columns: 1fr
+      }
 
-@keyframes rippleArc{
-  0%{
-    transform:translate(-50%,-50%) scale(.72);
-    border-width:var(--bw);
-  }
-  100%{
-    transform:translate(-50%,-50%) scale(1.15);
-    border-width:0px; /* vanish by thinning, not opacity */
-  }
-}
+      .grid {
+        grid-template-columns: 1fr
+      }
+    }
 
-@media (prefers-reduced-motion:reduce){
-  .backcard .ripple{ display:none !important; }
-}
+    /* Reduced motion */
+    @media (prefers-reduced-motion:reduce) {
 
-/* Mobile header refinement */
-@media (max-width:700px){
-  header{
-    display:flex;
-    align-items:flex-start;
-    gap:14px;
-  }
+      .backcard,
+      .card {
+        transition: none
+      }
+    }
 
-  .sig{
-    width:56px;          /* slightly smaller on mobile */
-    height:56px;
-    flex-shrink:0;       /* never squish the logo */
-    margin-top:2px;      /* optical alignment */
-  }
+    /* =========================================================
+       MOBILE "CENTER TRIGGER" SWING
+       - still allowed (movement), but NO "selection/highlight" styling on the front card
+       ========================================================= */
+    @media (max-width:700px) {
+      .stack:hover .backcard {
+        transform: none;
+      }
 
-  header > div{
-    flex:1;
-    min-width:0;         /* IMPORTANT: allows text wrapping */
-  }
+      /* no hover dependency on touch */
 
-  h1{
-    line-height:1.15;
-    word-break:normal;
-  }
-}
-</style>
+      .stack.m-active .backcard {
+        transform: rotate(var(--mobileBackRotate)) translate(var(--mobileBackTX), var(--mobileBackTY));
+      }
+
+      .stack.m-active .card {
+        transform: translateY(-2px);
+        border-color: var(--line);
+        /* no green highlight */
+      }
+    }
+
+    /* =========================================================
+       RIPPLE ARCS
+       ========================================================= */
+    .backcard .ripple {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      width: var(--sz);
+      height: var(--sz);
+      border-radius: 999px;
+      background: transparent;
+
+      border: var(--bw) solid var(--neon);
+      mix-blend-mode: multiply;
+      filter: blur(.15px);
+
+      transform: translate(-50%, -50%) scale(.72);
+      animation: rippleArc var(--dur) ease-out forwards;
+      pointer-events: none;
+    }
+
+    .backcard .ripple::before {
+      content: "";
+      position: absolute;
+
+      inset: calc(var(--bw) * -0.2);
+
+      border-radius: 999px;
+      border-style: solid;
+
+      border-width: inherit;
+      border-color: #000;
+
+      mix-blend-mode: screen;
+      filter: blur(.25px);
+      pointer-events: none;
+    }
+
+    @keyframes rippleArc {
+      0% {
+        transform: translate(-50%, -50%) scale(.72);
+        border-width: var(--bw);
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(1.15);
+        border-width: 0px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      .backcard .ripple {
+        display: none !important;
+      }
+    }
+
+    /* Mobile header refinement */
+    @media (max-width:700px) {
+      header {
+        display: flex;
+        align-items: flex-start;
+        gap: 14px;
+      }
+
+      .sig {
+        width: 56px;
+        height: 56px;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+
+      header>div {
+        flex: 1;
+        min-width: 0;
+      }
+
+      h1 {
+        line-height: 1.15;
+        word-break: normal;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<div class="void"></div>
+  <div class="void"></div>
 
-<div class="wrap">
+  <div class="wrap">
 
-<header>
-  <div>
-    <h1>James Scott McDowell</h1>
-    <p>Creative web developer — interactive UI, SVG/CSS animation, Three.js/WebGL.</p>
+    <header>
+      <div>
+        <h1>James Scott McDowell</h1>
+        <p>Creative Web Developer</p>
 
-    <div class="toplinks">
-      <a class="chip" href="mailto:mcdowellj87@gmail.com">mcdowellj87@gmail.com</a>
-      <a class="chip" href="https://github.com/mcdowellj87" target="_blank">GitHub</a>
-    </div>
+        <div class="toplinks">
+          <a class="chip" href="mailto:mcdowellj87@gmail.com">mcdowellj87@gmail.com</a>
+          <a class="chip" href="https://github.com/mcdowellj87" target="_blank">GitHub</a>
+        </div>
+      </div>
+
+      <img class="sig" src="signature.png" alt="Signature mark" />
+    </header>
+
+    <section class="grid">
+
+      <div class="stack">
+        <div class="backcard"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>MegaFuture 232</h2>
+            <div class="tag">Game Jam</div>
+          </div>
+          <div class="hero">
+            <img src="css/images/megafuture.png" alt="MegaFuture — stylized WebGL world and character study">
+          </div>
+          <div class="text">
+            Web GL game that explores narrative story telling with animation, music, sound and 2D art assets.
+          </div>
+          <div class="actions">
+            <a class="action" href="https://mcdowellj87.github.io/MegaFuture232/" target="_blank">
+              <span>Live</span><small>demo</small>
+            </a>
+            <a class="action" href="https://github.com/mcdowellj87/MegaFuture232" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>SingularityDating</h2>
+            <div class="tag">Viral App</div>
+          </div>
+          <div class="hero">
+            <img src="css/images/1.jpg" alt="SingularityDating — satirical mobile dating interface screenshot">
+          </div>
+          <div class="text">
+            Viral satirical dating platform featured on People.com. Built mobile-first with a sharp comedic premise.
+          </div>
+          <div class="actions">
+            <a class="action" href="https://www.singularitydating.com" target="_blank">
+              <span>Live</span><small>public</small>
+            </a>
+            <a class="action" href="https://people.com/human-interest/singularity-dating-app-only-one-man-allowed/"
+              target="_blank">
+              <span>Press</span><small>People.com</small>
+            </a>
+            <a class="action" href="https://github.com/mcdowellj87/singularitydating" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>Drury Village</h2>
+            <div class="tag">Three.js Prototype</div>
+          </div>
+          <div class="hero">
+            <img src="css/images/muffin_man.png" alt="Drury Village — stylized 3D character render">
+          </div>
+          <div class="text">
+            Browser-based 3D prototype exploring atmosphere, motion, and interaction using WebGL.
+          </div>
+          <div class="actions">
+            <a class="action" href="https://mcdowellj87.github.io/drury_village/" target="_blank">
+              <span>Live</span><small>demo</small>
+            </a>
+            <a class="action" href="https://github.com/mcdowellj87/drury_village" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>MyLittleGoblin</h2>
+            <div class="tag">Game Jam</div>
+          </div>
+          <div class="hero">
+            <img src="css/images/krobb.png" alt="MyLittleGoblin — goblin character render">
+          </div>
+          <div class="text">
+            Interactive web toy where player input dynamically drives character response through tone analysis.
+          </div>
+          <div class="actions">
+            <a class="action" href="https://mcdowellj87.github.io/MyLittleGoblin/mlg26.html" target="_blank">
+              <span>Live</span><small>demo</small>
+            </a>
+            <a class="action" href="https://github.com/mcdowellj87/MyLittleGoblin" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>Photoss</h2>
+            <div class="tag">Hardware</div>
+          </div>
+          <div class="hero">
+            <img src="css/images/phones.png" alt="Photoss — distributed photogrammetry rig with multiple smartphones">
+          </div>
+          <div class="text">
+            Distributed photogrammetry booth built from 50 repurposed Android phones capturing synchronized datasets.
+          </div>
+          <div class="actions">
+            <a class="action" href="https://github.com/mcdowellj87/photoss" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+            <a class="action" href="https://www.erectdesign.com/#h.5a2e4cd6ad79dd0b_3" target="_blank">
+              <span>Write-up</span><small>process</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+    </section>
+
+    <footer>
+      © <span id="y"></span> James Scott McDowell<br>
+      <small>
+        <em>“The walls between art and engineering exist only in our minds.” — Theo Jansen</em>
+      </small>
+    </footer>
+
   </div>
 
-  <img class="sig" src="signature.png" alt="Signature mark" />
-</header>
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
 
-<section class="grid">
+    /**
+     * Ripple arcs on each backcard.
+     * NOTE: "selection/highlight" effect removed (no border-color changes + no .m-active front-card highlight)
+     * BUT the mobile center-trigger still exists to drive ripples on touch devices.
+     */
+    (function () {
+      const rand = (a, b) => a + Math.random() * (b - a);
+      const pick = (arr) => arr[(Math.random() * arr.length) | 0];
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>SingularityDating</h2>
-      <div class="tag">Viral App</div>
-    </div>
-    <div class="hero">
-      <img src="css/images/1.jpg" alt="SingularityDating — satirical mobile dating interface screenshot">
-    </div>
-    <div class="text">
-      Viral satirical dating platform featured on People.com. Built mobile-first with a sharp comedic premise.
-    </div>
-    <div class="actions">
-      <a class="action" href="https://www.singularitydating.com" target="_blank">
-        <span>Live</span><small>public</small>
-      </a>
-      <a class="action" href="https://people.com/human-interest/singularity-dating-app-only-one-man-allowed/" target="_blank">
-        <span>Press</span><small>People.com</small>
-      </a>
-      <a class="action" href="https://github.com/mcdowellj87/singularitydating" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-    </div>
-  </article>
-</div>
+      // Floaty tuning (slower / dreamier)
+      const RATE_MS = 950;
+      const MIN_SIZE = 260;
+      const MAX_SIZE = 760;
+      const MIN_DUR = 1900;
+      const MAX_DUR = 3600;
+      const MIN_BW = 2;
+      const MAX_BW = 8;
+      const MAX_ALIVE = 5;
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>MegaFuture 232</h2>
-      <div class="tag">In Progress</div>
-    </div>
-    <div class="hero">
-      <img src="css/images/megafuture.png" alt="MegaFuture — stylized WebGL world and character study">
-    </div>
-    <div class="text">
-      Ongoing original project exploring stylized worldbuilding, character-driven spaces,
-      and cohesive visual language across 2D illustration and 3D WebGL environments.
-    </div>
-    <div class="actions">
-      <a class="action" href="https://mcdowellj87.github.io/MegaFuture232/" target="_blank">
-        <span>Live</span><small>demo</small>
-      </a>
-      <a class="action" href="https://github.com/mcdowellj87/MegaFuture232" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-    </div>
-  </article>
-</div>
+      const stacks = Array.from(document.querySelectorAll(".stack"));
+      const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>Drury Village</h2>
-      <div class="tag">Three.js</div>
-    </div>
-    <div class="hero">
-      <img src="css/images/muffin_man.png" alt="Drury Village — stylized 3D character render">
-    </div>
-    <div class="text">
-      Browser-based 3D prototype exploring atmosphere, motion, and interaction using WebGL.
-    </div>
-    <div class="actions">
-      <a class="action" href="https://mcdowellj87.github.io/drury_village/" target="_blank">
-        <span>Live</span><small>demo</small>
-      </a>
-      <a class="action" href="https://github.com/mcdowellj87/drury_village" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-    </div>
-  </article>
-</div>
+      function isMobile() {
+        return window.matchMedia("(max-width: 700px)").matches;
+      }
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>MyLittleGoblin</h2>
-      <div class="tag">Game Jam</div>
-    </div>
-    <div class="hero">
-      <img src="css/images/krobb.png" alt="MyLittleGoblin — goblin character render">
-    </div>
-    <div class="text">
-      Interactive web toy where player input dynamically drives character response through tone analysis.
-    </div>
-    <div class="actions">
-      <a class="action" href="https://mcdowellj87.github.io/MyLittleGoblin/mlg26.html" target="_blank">
-        <span>Live</span><small>demo</small>
-      </a>
-      <a class="action" href="https://github.com/mcdowellj87/MyLittleGoblin" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-    </div>
-  </article>
-</div>
+      function getCenterBandPx() {
+        const v = getComputedStyle(document.documentElement).getPropertyValue("--mobileCenterBandPx").trim();
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? n : 160;
+      }
 
-<div class="stack">
-  <div class="backcard"></div>
-  <article class="card">
-    <div class="cardhead">
-      <h2>Photoss</h2>
-      <div class="tag">Hardware</div>
-    </div>
-    <div class="hero">
-      <img src="css/images/phones.png" alt="Photoss — distributed photogrammetry rig with multiple smartphones">
-    </div>
-    <div class="text">
-      Distributed photogrammetry booth built from 50 repurposed Android phones capturing synchronized datasets.
-    </div>
-    <div class="actions">
-      <a class="action" href="https://github.com/mcdowellj87/photoss" target="_blank">
-        <span>Code</span><small>GitHub</small>
-      </a>
-      <a class="action" href="https://www.erectdesign.com/#h.5a2e4cd6ad79dd0b_3" target="_blank">
-        <span>Write-up</span><small>process</small>
-      </a>
-    </div>
-  </article>
-</div>
+      function pickEpicenter(rect) {
+        const w = rect.width;
+        const h = rect.height;
 
-</section>
+        const outX = rand(Math.max(10, w * 0.05), w * 0.30);
+        const outY = rand(Math.max(10, h * 0.05), h * 0.30);
 
-<footer>
-  © <span id="y"></span> James Scott McDowell<br>
-  <small>
-    <em>“The walls between art and engineering exist only in our minds.” — Theo Jansen</em>
-  </small>
-</footer>
+        const mode = pick(["RIGHT", "BOTTOM", "BR", "TR", "R_CORNER", "B_CORNER"]);
 
-</div>
+        if (mode === "RIGHT") return { x: w + outX, y: rand(-h * 0.15, h * 1.15) };
+        if (mode === "BOTTOM") return { x: rand(-w * 0.15, w * 1.15), y: h + outY };
+        if (mode === "TR") return { x: w + outX, y: -outY };
+        if (mode === "R_CORNER") return { x: w + outX, y: rand(0, h) };
+        if (mode === "B_CORNER") return { x: rand(0, w), y: h + outY };
+        return { x: w + outX, y: h + outY }; // BR
+      }
 
-<script>
-document.getElementById("y").textContent = new Date().getFullYear();
+      function spawnRipple(back) {
+        const r = document.createElement("span");
+        r.className = "ripple";
 
-/**
- * Black ripple arcs on each backcard.
- * - No opacity/alpha anywhere (pure black #000 stroke)
- * - Floaty cadence + multi-directional spawn:
- *   outside RIGHT, outside BOTTOM, TOP-RIGHT corner, BOTTOM-RIGHT corner.
- *
- * PLUS:
- * - Mobile center trigger: stacks near viewport middle get .m-active
- *   and also run ripples (since no hover).
- */
-(function(){
-  const rand = (a,b)=> a + Math.random()*(b-a);
-  const pick = (arr) => arr[(Math.random() * arr.length) | 0];
+        const rect = back.getBoundingClientRect();
+        const epic = pickEpicenter(rect);
 
-  // Floaty tuning (slower / dreamier)
-  const RATE_MS = 950;
-  const MIN_SIZE = 260;
-  const MAX_SIZE = 760;
-  const MIN_DUR  = 1900;
-  const MAX_DUR  = 3600;
-  const MIN_BW   = 2;
-  const MAX_BW   = 8;
-  const MAX_ALIVE = 5;
+        const sz = rand(MIN_SIZE, MAX_SIZE);
+        const dur = rand(MIN_DUR, MAX_DUR);
+        const bw = Math.round(rand(MIN_BW, MAX_BW));
 
-  const stacks = Array.from(document.querySelectorAll(".stack"));
-  const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        r.style.setProperty("--x", `${epic.x}px`);
+        r.style.setProperty("--y", `${epic.y}px`);
+        r.style.setProperty("--sz", `${sz}px`);
+        r.style.setProperty("--dur", `${dur}ms`);
+        r.style.setProperty("--bw", `${bw}px`);
 
-  function isMobile(){
-    return window.matchMedia("(max-width: 700px)").matches;
-  }
+        back.appendChild(r);
 
-  function getCenterBandPx(){
-    const v = getComputedStyle(document.documentElement).getPropertyValue("--mobileCenterBandPx").trim();
-    const n = parseFloat(v);
-    return Number.isFinite(n) ? n : 160;
-  }
+        const alive = back.querySelectorAll(":scope > .ripple").length;
+        if (alive > MAX_ALIVE) {
+          back.querySelector(":scope > .ripple")?.remove();
+        }
 
-  function pickEpicenter(rect){
-    const w = rect.width;
-    const h = rect.height;
+        r.addEventListener("animationend", () => r.remove(), { once: true });
+      }
 
-    const outX = rand(Math.max(10, w*0.05), w*0.30);
-    const outY = rand(Math.max(10, h*0.05), h*0.30);
+      // Desktop hover behavior (ripples only)
+      const desktopTimers = new WeakMap();
 
-    const mode = pick(["RIGHT", "BOTTOM", "BR", "TR", "R_CORNER", "B_CORNER"]);
+      function startDesktop(stack) {
+        const back = stack.querySelector(".backcard");
+        if (!back) return;
+        if (desktopTimers.get(stack)) return;
 
-    if(mode === "RIGHT")  return { x: w + outX, y: rand(-h*0.15, h*1.15) };
-    if(mode === "BOTTOM") return { x: rand(-w*0.15, w*1.15), y: h + outY };
-    if(mode === "TR")     return { x: w + outX, y: -outY };
-    if(mode === "R_CORNER") return { x: w + outX, y: rand(0, h) };
-    if(mode === "B_CORNER") return { x: rand(0, w), y: h + outY };
-    return { x: w + outX, y: h + outY }; // BR
-  }
-
-  function spawnRipple(back){
-    const r = document.createElement("span");
-    r.className = "ripple";
-
-    const rect = back.getBoundingClientRect();
-    const epic = pickEpicenter(rect);
-
-    const sz  = rand(MIN_SIZE, MAX_SIZE);
-    const dur = rand(MIN_DUR, MAX_DUR);
-    const bw  = Math.round(rand(MIN_BW, MAX_BW));
-
-    r.style.setProperty("--x", `${epic.x}px`);
-    r.style.setProperty("--y", `${epic.y}px`);
-    r.style.setProperty("--sz", `${sz}px`);
-    r.style.setProperty("--dur", `${dur}ms`);
-    r.style.setProperty("--bw", `${bw}px`);
-
-    back.appendChild(r);
-
-    const alive = back.querySelectorAll(":scope > .ripple").length;
-    if(alive > MAX_ALIVE){
-      back.querySelector(":scope > .ripple")?.remove();
-    }
-
-    r.addEventListener("animationend", () => r.remove(), { once:true });
-  }
-
-  // Desktop hover behavior (unchanged)
-  const desktopTimers = new WeakMap();
-
-  function startDesktop(stack){
-    const back = stack.querySelector(".backcard");
-    if(!back) return;
-    if(desktopTimers.get(stack)) return;
-
-    spawnRipple(back);
-    const t = setInterval(() => spawnRipple(back), RATE_MS);
-    desktopTimers.set(stack, t);
-  }
-
-  function stopDesktop(stack){
-    const t = desktopTimers.get(stack);
-    if(!t) return;
-    clearInterval(t);
-    desktopTimers.delete(stack);
-  }
-
-  // Mobile center trigger
-  let activeMobileStack = null;
-  let mobileTimer = null;
-
-  function setMobileActive(stack){
-    if(activeMobileStack === stack) return;
-
-    if(activeMobileStack){
-      activeMobileStack.classList.remove("m-active");
-    }
-    activeMobileStack = stack;
-
-    if(activeMobileStack){
-      activeMobileStack.classList.add("m-active");
-    }
-
-    // restart ripple interval to target the active stack
-    if(mobileTimer){
-      clearInterval(mobileTimer);
-      mobileTimer = null;
-    }
-
-    if(activeMobileStack){
-      const back = activeMobileStack.querySelector(".backcard");
-      if(back){
         spawnRipple(back);
-        mobileTimer = setInterval(() => {
-          // if the active stack changed or got removed, stop
-          if(!activeMobileStack || !document.body.contains(activeMobileStack)){
-            clearInterval(mobileTimer);
-            mobileTimer = null;
-            return;
+        const t = setInterval(() => spawnRipple(back), RATE_MS);
+        desktopTimers.set(stack, t);
+      }
+
+      function stopDesktop(stack) {
+        const t = desktopTimers.get(stack);
+        if (!t) return;
+        clearInterval(t);
+        desktopTimers.delete(stack);
+      }
+
+      // Mobile center trigger (ripples only)
+      let activeMobileStack = null;
+      let mobileTimer = null;
+
+      function setMobileActive(stack) {
+        if (activeMobileStack === stack) return;
+
+        // remove class from previous
+        if (activeMobileStack) {
+          activeMobileStack.classList.remove("m-active");
+        }
+
+        activeMobileStack = stack;
+
+        // add class to new
+        if (activeMobileStack) {
+          activeMobileStack.classList.add("m-active");
+        }
+
+        // restart ripple interval to target the active stack
+        if (mobileTimer) {
+          clearInterval(mobileTimer);
+          mobileTimer = null;
+        }
+
+        if (activeMobileStack) {
+          const back = activeMobileStack.querySelector(".backcard");
+          if (back) {
+            spawnRipple(back);
+            mobileTimer = setInterval(() => {
+              if (!activeMobileStack || !document.body.contains(activeMobileStack)) {
+                clearInterval(mobileTimer);
+                mobileTimer = null;
+                return;
+              }
+              const b = activeMobileStack.querySelector(".backcard");
+              if (b) spawnRipple(b);
+            }, RATE_MS);
           }
-          const b = activeMobileStack.querySelector(".backcard");
-          if(b) spawnRipple(b);
-        }, RATE_MS);
+        }
       }
-    }
-  }
 
-  function updateMobileActiveByCenter(){
-    if(!isMobile() || prefersReduce){
-      // ensure cleanup when leaving mobile
-      if(activeMobileStack) activeMobileStack.classList.remove("m-active");
-      activeMobileStack = null;
-      if(mobileTimer){ clearInterval(mobileTimer); mobileTimer = null; }
-      return;
-    }
+      function updateMobileActiveByCenter() {
+        if (!isMobile() || prefersReduce) {
+          if (activeMobileStack) activeMobileStack.classList.remove("m-active");
+          activeMobileStack = null;
+          if (mobileTimer) { clearInterval(mobileTimer); mobileTimer = null; }
+          return;
+        }
 
-    const centerY = window.innerHeight * 0.5;
-    const band = getCenterBandPx();
+        const centerY = window.innerHeight * 0.5;
+        const band = getCenterBandPx();
 
-    let best = null;
-    let bestDist = Infinity;
+        let best = null;
+        let bestDist = Infinity;
 
-    for(const stack of stacks){
-      const r = stack.getBoundingClientRect();
-      const mid = r.top + r.height * 0.5;
+        for (const stack of stacks) {
+          const r = stack.getBoundingClientRect();
+          const mid = r.top + r.height * 0.5;
 
-      // ignore if totally off-screen
-      if(r.bottom < 0 || r.top > window.innerHeight) continue;
+          if (r.bottom < 0 || r.top > window.innerHeight) continue;
 
-      const dist = Math.abs(mid - centerY);
-      if(dist < bestDist){
-        bestDist = dist;
-        best = stack;
+          const dist = Math.abs(mid - centerY);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = stack;
+          }
+        }
+
+        if (best && bestDist <= band) {
+          setMobileActive(best);
+        } else {
+          setMobileActive(null);
+        }
       }
-    }
 
-    // only activate if within band (prevents constant animation when far away)
-    if(best && bestDist <= band){
-      setMobileActive(best);
-    }else{
-      setMobileActive(null);
-    }
-  }
+      // Wire up desktop hover ripple intervals
+      stacks.forEach(stack => {
+        stack.addEventListener("mouseenter", () => { if (!isMobile() && !prefersReduce) startDesktop(stack); });
+        stack.addEventListener("mouseleave", () => { if (!isMobile()) stopDesktop(stack); });
+      });
 
-  // Wire up desktop hover ripple intervals
-  stacks.forEach(stack => {
-    stack.addEventListener("mouseenter", () => { if(!isMobile() && !prefersReduce) startDesktop(stack); });
-    stack.addEventListener("mouseleave", () => { if(!isMobile()) stopDesktop(stack); });
-  });
+      // Mobile: update active stack on scroll/resize
+      let raf = 0;
+      function onScrollResize() {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = 0;
+          updateMobileActiveByCenter();
+        });
+      }
 
-  // Mobile: update active stack on scroll/resize
-  let raf = 0;
-  function onScrollResize(){
-    if(raf) return;
-    raf = requestAnimationFrame(() => {
-      raf = 0;
+      window.addEventListener("scroll", onScrollResize, { passive: true });
+      window.addEventListener("resize", onScrollResize);
+
+      // initial
       updateMobileActiveByCenter();
-    });
-  }
-
-  window.addEventListener("scroll", onScrollResize, { passive:true });
-  window.addEventListener("resize", onScrollResize);
-
-  // initial
-  updateMobileActiveByCenter();
-})();
-</script>
+    })();
+  </script>
 </body>
+
 </html>
