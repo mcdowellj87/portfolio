@@ -17,6 +17,10 @@
       --text: #eaeaea;
       --muted: #b8b8b8;
       --neon: #39ff14;
+      --swingoutHi: rgba(57, 255, 20, .95);
+      --swingoutLo: rgba(57, 255, 20, .55);
+      --swingoutDarkHi: rgba(57, 255, 20, .32);
+      --swingoutDarkLo: rgba(57, 255, 20, .12);
 
       --radius: 16px;
       --shadow: 0 22px 60px rgba(0, 0, 0, .75);
@@ -73,7 +77,7 @@
     .wrap {
       max-width: 900px;
       margin: 0 auto;
-      padding: 42px 18px 80px;
+      padding: 0 18px 80px;
     }
 
     header {
@@ -81,6 +85,36 @@
       grid-template-columns: 1fr auto;
       gap: 20px;
       margin-bottom: 34px;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      width: 100vw;
+      margin-left: calc(50% - 50vw);
+      margin-right: calc(50% - 50vw);
+      padding: 18px clamp(18px, 4vw, 48px) 20px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .header-backcard {
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      z-index: 0;
+      background:
+        radial-gradient(700px 360px at 30% 10%, rgba(255, 255, 255, .08), transparent 60%),
+        linear-gradient(135deg, var(--swingoutDarkHi), var(--swingoutDarkLo));
+      box-shadow:
+        inset 0 0 0 1px rgba(57, 255, 20, .12),
+        0 18px 40px rgba(57, 255, 20, .12);
+      opacity: .95;
+      pointer-events: none;
+    }
+
+    header>div:not(.header-backcard),
+    header>img {
+      position: relative;
+      z-index: 1;
     }
 
     h1 {
@@ -150,7 +184,7 @@
       /* tighter corners (was 18px) */
       background:
         radial-gradient(700px 360px at 30% 10%, rgba(255, 255, 255, .14), transparent 60%),
-        linear-gradient(135deg, rgba(57, 255, 20, .95), rgba(57, 255, 20, .55));
+        linear-gradient(135deg, var(--swingoutHi), var(--swingoutLo));
       box-shadow:
         0 0 0 1px rgba(57, 255, 20, .12),
         0 26px 70px rgba(57, 255, 20, .18);
@@ -350,7 +384,7 @@
     /* =========================================================
        RIPPLE ARCS
        ========================================================= */
-    .backcard .ripple {
+    .ripple-surface .ripple {
       position: absolute;
       left: var(--x);
       top: var(--y);
@@ -368,7 +402,7 @@
       pointer-events: none;
     }
 
-    .backcard .ripple::before {
+    .ripple-surface .ripple::before {
       content: "";
       position: absolute;
 
@@ -398,7 +432,7 @@
     }
 
     @media (prefers-reduced-motion:reduce) {
-      .backcard .ripple {
+      .ripple-surface .ripple {
         display: none !important;
       }
     }
@@ -444,6 +478,7 @@
   <div class="wrap">
 
     <header>
+      <div class="header-backcard ripple-surface"></div>
       <div>
         <h1>James Scott McDowell</h1>
         <p>Creative Web Developer</p>
@@ -460,7 +495,7 @@
 
     <section class="grid">
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>SuperFuture:<br>The Lost Utopia</h2>
@@ -487,7 +522,7 @@
         </article>
       </div>
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>MegaFuture 232</h2>
@@ -511,7 +546,7 @@
       </div>
 
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>SingularityDating</h2>
@@ -539,7 +574,7 @@
       </div>
 
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>Drury Village</h2>
@@ -563,7 +598,7 @@
       </div>
 
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>MyLittleGoblin</h2>
@@ -587,7 +622,7 @@
       </div>
 
       <div class="stack">
-        <div class="backcard"></div>
+        <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
             <h2>Photoss</h2>
@@ -644,6 +679,8 @@
       const MAX_ALIVE = 5;
 
       const stacks = Array.from(document.querySelectorAll(".stack"));
+      const headerEl = document.querySelector("header");
+      const headerBack = headerEl ? headerEl.querySelector(".header-backcard") : null;
       const prefersReduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       function isMobile() {
@@ -703,21 +740,20 @@
       // Desktop hover behavior (ripples only)
       const desktopTimers = new WeakMap();
 
-      function startDesktop(stack) {
-        const back = stack.querySelector(".backcard");
+      function startDesktop(back) {
         if (!back) return;
-        if (desktopTimers.get(stack)) return;
+        if (desktopTimers.get(back)) return;
 
         spawnRipple(back);
         const t = setInterval(() => spawnRipple(back), RATE_MS);
-        desktopTimers.set(stack, t);
+        desktopTimers.set(back, t);
       }
 
-      function stopDesktop(stack) {
-        const t = desktopTimers.get(stack);
+      function stopDesktop(back) {
+        const t = desktopTimers.get(back);
         if (!t) return;
         clearInterval(t);
-        desktopTimers.delete(stack);
+        desktopTimers.delete(back);
       }
 
       // Mobile center trigger (ripples only)
@@ -798,9 +834,14 @@
 
       // Wire up desktop hover ripple intervals
       stacks.forEach(stack => {
-        stack.addEventListener("mouseenter", () => { if (!isMobile() && !prefersReduce) startDesktop(stack); });
-        stack.addEventListener("mouseleave", () => { if (!isMobile()) stopDesktop(stack); });
+        const back = stack.querySelector(".backcard");
+        stack.addEventListener("mouseenter", () => { if (!isMobile() && !prefersReduce) startDesktop(back); });
+        stack.addEventListener("mouseleave", () => { if (!isMobile()) stopDesktop(back); });
       });
+
+      if (headerEl && headerBack) {
+        if (!prefersReduce) startDesktop(headerBack);
+      }
 
       // Mobile: update active stack on scroll/resize
       let raf = 0;
