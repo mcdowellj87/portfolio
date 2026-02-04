@@ -106,9 +106,7 @@
       background:
         radial-gradient(700px 360px at 30% 10%, rgba(255, 255, 255, .08), transparent 60%),
         linear-gradient(135deg, var(--swingoutDarkHi), var(--swingoutDarkLo));
-      box-shadow:
-        inset 0 0 0 1px rgba(57, 255, 20, .12),
-        0 18px 40px rgba(57, 255, 20, .12);
+      box-shadow: 0 18px 40px rgba(57, 255, 20, .12);
       opacity: .95;
       pointer-events: none;
     }
@@ -123,7 +121,7 @@
       margin: 0;
       font-size: clamp(26px, 4vw, 40px);
       letter-spacing: 0.16em;
-      color: #0B9600;
+      color: var(--neon);
       text-shadow:
         0 3px 0 #000,
         0 4.5px 0 #000;
@@ -495,7 +493,7 @@
     <header>
       <div class="header-backcard ripple-surface"></div>
       <div>
-        <h1>JAMES SCOTT MCDOWELL</h1>
+        <h1>SCOTT MCDOWELL</h1>
         <p>Creative Web Developer</p>
 
         <div class="toplinks">
@@ -708,14 +706,16 @@
         return Number.isFinite(n) ? n : 160;
       }
 
-      function pickEpicenter(rect) {
+      function pickEpicenter(rect, biasRight = false) {
         const w = rect.width;
         const h = rect.height;
 
         const outX = rand(Math.max(10, w * 0.05), w * 0.30);
         const outY = rand(Math.max(10, h * 0.05), h * 0.30);
 
-        const mode = pick(["RIGHT", "BOTTOM", "BR", "TR", "R_CORNER", "B_CORNER"]);
+        const mode = biasRight
+          ? pick(["RIGHT", "RIGHT", "RIGHT", "TR", "R_CORNER", "BR"])
+          : pick(["RIGHT", "BOTTOM", "BR", "TR", "R_CORNER", "B_CORNER"]);
 
         if (mode === "RIGHT") return { x: w + outX, y: rand(-h * 0.15, h * 1.15) };
         if (mode === "BOTTOM") return { x: rand(-w * 0.15, w * 1.15), y: h + outY };
@@ -730,7 +730,7 @@
         r.className = "ripple";
 
         const rect = back.getBoundingClientRect();
-        const epic = pickEpicenter(rect);
+        const epic = pickEpicenter(rect, back.classList.contains("header-backcard"));
 
         const sz = rand(MIN_SIZE, MAX_SIZE);
         const dur = rand(MIN_DUR, MAX_DUR);
