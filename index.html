@@ -283,6 +283,39 @@
       object-position: center;
     }
 
+    .video-placeholder {
+      position: relative;
+      min-height: 100%;
+      width: 100%;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(57, 255, 20, .22);
+      background:
+        linear-gradient(90deg, rgba(57, 255, 20, .08) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(57, 255, 20, .08) 1px, transparent 1px),
+        radial-gradient(340px 180px at 50% 40%, rgba(57, 255, 20, .13), transparent 58%),
+        #050505;
+      background-size: 22px 22px, 22px 22px, auto, auto;
+      color: rgba(234, 234, 234, .68);
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .video-placeholder::before {
+      content: "";
+      width: 52px;
+      height: 52px;
+      border-radius: 999px;
+      border: 1px solid rgba(57, 255, 20, .48);
+      background:
+        linear-gradient(90deg, transparent 36%, rgba(57, 255, 20, .82) 36%, rgba(57, 255, 20, .82) 64%, transparent 64%),
+        linear-gradient(0deg, transparent 36%, rgba(57, 255, 20, .82) 36%, rgba(57, 255, 20, .82) 64%, transparent 64%);
+      box-shadow: 0 0 24px rgba(57, 255, 20, .16);
+    }
+
     /* Text block (NO SCROLLBARS) */
     .text {
       border-radius: 6px;
@@ -301,6 +334,84 @@
 
     .text::-webkit-scrollbar {
       display: none;
+    }
+
+    .text-link {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: var(--neon);
+      font: inherit;
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      cursor: pointer;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: clamp(14px, 4vw, 44px);
+      background: rgba(0, 0, 0, .82);
+    }
+
+    .modal.is-open {
+      display: grid;
+    }
+
+    .modal-panel {
+      width: min(100%, 1100px);
+      max-height: min(90vh, 820px);
+      border: 1px solid rgba(57, 255, 20, .36);
+      border-radius: 8px;
+      background: #050505;
+      box-shadow: 0 22px 80px rgba(0, 0, 0, .9);
+      overflow: hidden;
+    }
+
+    .modal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-head h2 {
+      margin: 0;
+      color: var(--neon);
+      font-size: 14px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .modal-close {
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      padding: 7px 10px;
+      background: rgba(255, 255, 255, .03);
+      color: var(--text);
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      border-color: rgba(57, 255, 20, .45);
+      background: rgba(57, 255, 20, .06);
+    }
+
+    .modal-body {
+      max-height: calc(min(90vh, 820px) - 50px);
+      overflow: auto;
+      background: #fff;
+    }
+
+    .modal-body img {
+      display: block;
+      width: 100%;
+      height: auto;
     }
 
     /* Actions */
@@ -511,6 +622,57 @@
         <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
+            <h2>Walden II</h2>
+            <div class="tag">Field System</div>
+          </div>
+
+          <div class="hero">
+            <img src="css/images/nomad.png" alt="Walden II — nomadic field guide interface card">
+          </div>
+
+          <div class="text">
+            Walden II is a pocket field guide for a personal off-grid system: part packing checklist, part travel
+            dashboard, part hand-drawn operating manual.
+          </div>
+
+          <div class="actions">
+            <a class="action" href="https://mcdowellj87.github.io/walden-ii/" target="_blank">
+              <span>Live</span><small>field guide</small>
+            </a>
+            <a class="action" href="https://github.com/mcdowellj87/walden-ii" target="_blank">
+              <span>Code</span><small>GitHub</small>
+            </a>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard ripple-surface"></div>
+        <article class="card">
+          <div class="cardhead">
+            <h2>PS2-Controlled<br>Wheelchair Robot</h2>
+            <div class="tag">Arduino</div>
+          </div>
+          <div class="hero">
+            <div class="video-placeholder">Video Pending</div>
+          </div>
+          <div class="text">
+            Arduino robotics prototype using a PlayStation 2 controller to drive a powered wheelchair platform. Built
+            as a practical <button class="text-link" type="button" data-modal-open="robot-diagram-modal">control-system
+              experiment</button> in mobility hardware, input mapping, and real-world motor control.
+          </div>
+          <div class="actions">
+            <span class="action">
+              <span>Video</span><small>coming soon</small>
+            </span>
+          </div>
+        </article>
+      </div>
+
+      <div class="stack">
+        <div class="backcard ripple-surface"></div>
+        <article class="card">
+          <div class="cardhead">
             <h2>SuperFuture:<br>The Lost Utopia</h2>
             <div class="tag">In Progress</div>
           </div>
@@ -520,11 +682,7 @@
           </div>
 
           <div class="text">
-            In a world without friction, in an age of automation,
-            how do we identify with ourselves when humanity clings to conflict and its resolution?
-            This story explores the human side of a high-tech paradise,
-            the subtle thoughts that we distract ourselves from through our daily work
-            in a pre-singularity age.
+            A WebGL open world demo with a dynamic lighting system.
           </div>
 
           <div class="actions">
@@ -669,8 +827,46 @@
 
   </div>
 
+  <div class="modal" id="robot-diagram-modal" aria-hidden="true" role="dialog" aria-labelledby="robot-diagram-title">
+    <div class="modal-panel">
+      <div class="modal-head">
+        <h2 id="robot-diagram-title">Wheelchair Robot Control Diagram</h2>
+        <button class="modal-close" type="button" data-modal-close>Close</button>
+      </div>
+      <div class="modal-body">
+        <img src="css/images/robot_diagram.png" alt="Arduino wheelchair robot wiring and control diagram">
+      </div>
+    </div>
+  </div>
+
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    document.querySelectorAll("[data-modal-open]").forEach(button => {
+      button.addEventListener("click", () => {
+        const modal = document.getElementById(button.dataset.modalOpen);
+        if (!modal) return;
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+        modal.querySelector("[data-modal-close]")?.focus();
+      });
+    });
+
+    document.querySelectorAll(".modal").forEach(modal => {
+      modal.addEventListener("click", event => {
+        if (event.target !== modal && !event.target.matches("[data-modal-close]")) return;
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+      });
+    });
+
+    document.addEventListener("keydown", event => {
+      if (event.key !== "Escape") return;
+      document.querySelectorAll(".modal.is-open").forEach(modal => {
+        modal.classList.remove("is-open");
+        modal.setAttribute("aria-hidden", "true");
+      });
+    });
 
     /**
      * Ripple arcs on each backcard.
