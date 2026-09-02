@@ -8,7 +8,10 @@
   <title>James Scott McDowell — Portfolio</title>
   <meta name="description" content="Creative web developer" />
   <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet" />
 
   <style>
     :root {
@@ -119,16 +122,25 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(26px, 4vw, 40px);
-      letter-spacing: 0.16em;
+      font-family: "Permanent Marker", "Marker Felt", "Arial Black", fantasy;
+      font-size: clamp(44px, 6.4vw, 94px);
+      font-weight: 400;
+      line-height: .78;
+      letter-spacing: .025em;
       color: var(--neon);
+      -webkit-text-stroke: 1.8px rgba(0, 0, 0, .9);
       text-shadow:
-        0 3px 0 #000,
-        0 4.5px 0 #000;
+        2px 3px 0 #000,
+        5px 6px 0 rgba(0, 0, 0, .82),
+        -2px 1px 0 rgba(57, 255, 20, .48),
+        0 0 20px rgba(57, 255, 20, .32);
+      transform: none;
+      transform-origin: left center;
+      paint-order: stroke fill;
     }
 
     header p {
-      margin: 8px 0 0;
+      margin: 14px 0 0;
       color: var(--muted);
       max-width: 60ch;
     }
@@ -580,10 +592,12 @@
     }
 
     .hero-superfuture img {
-      width: 110%;
+      width: 100%;
       height: auto;
-      transform: translateY(-60%);
-      scale: 0.5;
+      object-fit: unset;
+      object-position: center;
+      transform: translateY(-30%);
+      scale: 1;
     }
 
     .hero-muffin img {
@@ -604,7 +618,7 @@
     <header>
       <div class="header-backcard ripple-surface"></div>
       <div>
-        <h1>SCOTT MCDOWELL</h1>
+        <h1>Scott McDowell</h1>
         <p>Creative Web Developer</p>
 
         <div class="toplinks">
@@ -650,16 +664,16 @@
         <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
-            <h2>SuperFuture:<br>The Lost Utopia</h2>
+            <h2>Siegress</h2>
             <div class="tag">In Progress</div>
           </div>
 
           <div class="hero hero-superfuture">
-            <img src="css/images/superfusion.png" alt='SuperFuture — "Utopian" WebGL world'>
+            <img src="css/images/superfusion.png" alt="Siegress — horror game scene">
           </div>
 
           <div class="text">
-            A WebGL open world demo with a dynamic lighting system.
+            A survival horror game about escaping a wandering creature while managing the dosage of a life-saving drug that keeps the player's psychic powers from destroying them.
           </div>
 
           <div class="actions">
@@ -715,30 +729,6 @@
               <span>Press</span><small>People.com</small>
             </a>
             <a class="action" href="https://github.com/mcdowellj87/singularitydating" target="_blank">
-              <span>Code</span><small>GitHub</small>
-            </a>
-          </div>
-        </article>
-      </div>
-
-      <div class="stack">
-        <div class="backcard ripple-surface"></div>
-        <article class="card">
-          <div class="cardhead">
-            <h2>Drury Village</h2>
-            <div class="tag">Three.js Prototype</div>
-          </div>
-          <div class="hero hero-muffin">
-            <img src="css/images/muffin_man.png" alt="Drury Village — stylized 3D character render">
-          </div>
-          <div class="text">
-            Browser-based 3D prototype exploring atmosphere, motion, and interaction using WebGL.
-          </div>
-          <div class="actions">
-            <a class="action" href="https://mcdowellj87.github.io/drury_village/" target="_blank">
-              <span>Live</span><small>demo</small>
-            </a>
-            <a class="action" href="https://github.com/mcdowellj87/drury_village" target="_blank">
               <span>Code</span><small>GitHub</small>
             </a>
           </div>
