@@ -613,6 +613,18 @@
       scale: 1;
     }
 
+    .hero-walden {
+      background: #254ae4;
+    }
+
+    .hero-walden img {
+      width: 92%;
+      height: 92%;
+      object-fit: contain;
+      object-position: center;
+      transform: translate(3%, -12%);
+    }
+
     .hero-muffin img {
       transform: translateY(-20%);
     }
@@ -653,13 +665,12 @@
             <div class="tag">Field System</div>
           </div>
 
-          <div class="hero">
+          <div class="hero hero-walden">
             <img src="css/images/nomad.png" alt="Walden II — nomadic field guide interface card">
           </div>
 
           <div class="text">
-            Walden II is a pocket field guide for a personal off-grid system: part packing checklist, part travel
-            dashboard, part hand-drawn operating manual.
+            Walden II is a React app and off-grid van life/overlanding planning tool. It uses a trifold brochure-style interface where users can select vehicle types and load out for adventures across a growing list of personally vetted campsites.
           </div>
 
           <div class="actions">
@@ -686,7 +697,7 @@
           </div>
 
           <div class="text">
-            A survival horror game about escaping a wandering creature while managing the dosage of a life-saving drug that keeps the player's psychic powers from destroying them.
+            A browser-based survival horror game that uses WebGL, static hand drawn images, and hand-sculpted 3D art assets.
           </div>
 
           <div class="actions">
@@ -700,14 +711,14 @@
         <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
-            <h2>MegaFuture 232</h2>
+            <h2>MegaFuture<sup>232</sup></h2>
             <div class="tag">Game Jam</div>
           </div>
           <div class="hero">
             <img src="css/images/megafuture.png" alt="MegaFuture — stylized WebGL world and character study">
           </div>
           <div class="text">
-            Web GL game that explores narrative story telling with animation, music, sound and 2D art assets.
+            A browser-based WebGL game that uses animation, music, sound, and 2D art assets to explore narrative storytelling.
           </div>
           <div class="actions">
             <a class="action" href="https://mcdowellj87.github.io/MegaFuture232/" target="_blank">
@@ -759,7 +770,7 @@
             <img src="css/images/krobb.png" alt="MyLittleGoblin — goblin character render">
           </div>
           <div class="text">
-            Interactive web toy where player input dynamically drives character response through tone analysis.
+            A web toy where the user can tell a goblin nice or rude things. The goblin character reacts to these remarks after analyzing the user's tone using Google's Perspective API.
           </div>
           <div class="actions">
             <a class="action" href="https://mcdowellj87.github.io/MyLittleGoblin/mlg26.html" target="_blank">
@@ -783,7 +794,7 @@
             <img src="css/images/phones.png" alt="Photoss — distributed photogrammetry rig with multiple smartphones">
           </div>
           <div class="text">
-            Distributed photogrammetry booth built from 50 repurposed Android phones capturing synchronized datasets.
+            Photogrammetry booth project built from 50 repurposed Android phones, with the goal of capturing 50 images in parallel using Python networking code.
           </div>
           <div class="actions">
             <a class="action" href="https://github.com/mcdowellj87/photoss" target="_blank">
@@ -796,7 +807,7 @@
         </article>
       </div>
 
-      <div class="stack">
+      <div class="stack" data-project-card="arduino">
         <div class="backcard ripple-surface"></div>
         <article class="card">
           <div class="cardhead">
@@ -845,6 +856,11 @@
 
   <script>
     document.getElementById("y").textContent = new Date().getFullYear();
+
+    const showArduinoCard = false;
+    if (!showArduinoCard) {
+      document.querySelector('[data-project-card="arduino"]')?.remove();
+    }
 
     document.querySelectorAll("[data-modal-open]").forEach(button => {
       button.addEventListener("click", () => {
