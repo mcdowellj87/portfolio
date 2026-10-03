@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Siegress developer notes: a chronological technical history of map-driven world generation, WebGL rendering, physics, loading, tooling, and refactoring.">
+<meta name="theme-color" content="#080b08">
+<title>Siegress — Developer Notes | Scott McDowell</title>
+<style>
+:root { color-scheme:dark; --bg:#080b08; --panel:#101510; --text:#e8eee7; --muted:#a8b6a5; --accent:#83f56b; --line:#293329; }
+* { box-sizing:border-box; }
+html { scroll-padding-top:90px; }
+body { margin:0; background:var(--bg); color:var(--text); font:17px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+a { color:var(--accent); text-underline-offset:4px; overflow-wrap:anywhere; }
+a:hover { color:#c5ffb9; }
+a:focus-visible, .table-scroll:focus-visible { outline:3px solid var(--accent); outline-offset:4px; }
+.topbar { border-bottom:1px solid var(--line); background:var(--bg); }
+.topbar-inner { max-width:900px; margin:auto; padding:14px 22px; display:flex; flex-wrap:wrap; justify-content:space-between; gap:10px; }
+.topbar a { display:inline-flex; align-items:center; min-height:44px; font-size:14px; text-decoration:none; }
+.brand { letter-spacing:.1em; color:var(--muted); font-size:12px; align-self:center; text-transform:uppercase; }
+main { max-width:820px; padding:48px 24px 80px; margin:auto; }
+.eyebrow { color:var(--accent); letter-spacing:.16em; text-transform:uppercase; font-size:12px; margin:0 0 16px; }
+h1 { font-size:clamp(34px,7vw,56px); line-height:1.12; letter-spacing:-.04em; margin:0 0 24px; }
+h2 { margin:64px 0 22px; padding-top:22px; border-top:1px solid var(--line); font-size:clamp(25px,5vw,32px); line-height:1.25; letter-spacing:-.025em; }
+h3 { margin:40px 0 16px; padding-left:16px; border-left:3px solid var(--accent); font-size:21px; line-height:1.4; }
+p { margin:0 0 20px; }
+main>h1+p { font-size:20px; color:var(--muted); line-height:1.6; }
+strong { font-weight:650; }
+code { font: .87em ui-monospace,SFMono-Regular,Consolas,monospace; color:#c3dfbe; background:#182018; padding:2px 5px; border-radius:4px; overflow-wrap:anywhere; }
+li { margin-bottom:10px; }
+ul { padding-left:24px; }
+.jump { position:sticky; top:0; z-index:2; background:var(--bg); border-bottom:1px solid var(--line); }
+.jump-inner { max-width:900px; margin:auto; display:flex; gap:6px; padding:8px 18px; overflow-x:auto; }
+.jump a { white-space:nowrap; min-height:44px; padding:10px 14px; background:var(--panel); border:1px solid var(--line); border-radius:7px; text-decoration:none; font-size:13px; }
+.table-scroll { max-width:100%; overflow-x:auto; margin:24px 0; border:1px solid var(--line); border-radius:8px; }
+table { border-collapse:collapse; min-width:640px; width:100%; font-size:14px; line-height:1.5; }
+th,td { padding:13px 15px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); }
+th { background:var(--panel); color:var(--accent); }
+footer { border-top:1px solid var(--line); padding:24px; text-align:center; color:var(--muted); font-size:13px; }
+@media(max-width:480px) { main { padding:32px 20px 56px; } body { font-size:16px; } h3 { font-size:20px; } .brand { display:none; } .topbar-inner { padding:10px 20px; } }
+@media print { :root { --bg:white; --text:#111; --muted:#444; --accent:#23531b; --line:#ccc; } .topbar,.jump,footer { display:none; } main { max-width:none; padding:0; } h2,h3 { break-after:avoid; } .table-scroll { overflow:visible; } table { min-width:0; } }
+</style>
+</head>
+<body>
+<div class="topbar"><div class="topbar-inner"><a href="../index.html">← Portfolio</a><span class="brand">Scott McDowell / Project archive</span><a href="siegress-developer-notes.md" download>Download document ↓</a></div></div>
+<nav class="jump" aria-label="Document sections"><div class="jump-inner"><a href="#foundation">Foundation</a><a href="#january">January 2026</a><a href="#superfuture">SuperFuture</a><a href="#september">September 2026</a><a href="#lessons">Lessons</a><a href="#evidence">Evidence</a></div></nav>
+<main id="notes"><p class="eyebrow">Technical development history · Interview reference</p>
+<h1>Siegress — Developer Notes</h1>
+<h2 id="technologies">Technologies used</h2>
+<ul>
+<li>HTML5, CSS, and vanilla JavaScript with ES modules.</li>
+<li>Three.js and WebGL for 3D rendering, with custom shader effects.</li>
+<li>Canvas 2D for reading map colors and editing map.png.</li>
+<li>Web Audio API for footsteps; HTML audio for music.</li>
+<li>GLB/glTF models and Three.js animation mixers.</li>
+<li>Vite, Node.js, and npm for local development and builds.</li>
+<li>OpenAI Sites Vite plugin for build integration.</li>
+<li>Blender/Python tree-generation utility included in the repository.</li>
+</ul>
+<h2 id="foundation">Early September 2025 — Drury Village begins</h2>
+<ul>
+<li>Generated hills, trees, and buildings from a hand-editable map image.</li>
+<li>Created in-game interpreter that converted map colors to rendered in-game features.</li>
+<li>Had boundary walls along the edges of the map.</li>
+<li>Added gravity and jumping.</li>
+<li>The monster already had walking, running, and attack animations.</li>
+<li>Generated its GLB model from a 2D drawing using Meshy.ai.</li>
+<li>Rigged and animated it with either Meshy.ai or Adobe’s Mixamo; I do not recall which service.</li>
+<li>Began at the beginning of September 2025; this phase is based on my recollection.</li>
+</ul>
+<h2 id="january">January 6–7, 2026 — MegaFuture232 baseline</h2>
+<ul>
+<li>Imported the existing map-driven world demo.</li>
+<li>Smoothed terrain heights.</li>
+<li>Changed generic Christmas trees into a typical fractal tree shape.</li>
+<li>Commits: <code>8842e28</code> → <code>2919c2a</code>.</li>
+</ul>
+<h2 id="january-12-2026-camera-and-asset-loading">January 12, 2026 — camera controls</h2>
+<ul>
+<li>Added camera controls and first/third-person toggling.</li>
+</ul>
+<h2 id="january-23-24-2026-tooling-and-startup">January 23–24, 2026 — tooling and startup</h2>
+<ul>
+<li>Built material-preview tools with FBX/GLB support and custom toon/specular shaders.</li>
+<li>Added a loading screen; integrated it into the main page.</li>
+<li>Fixed <code>.png</code> versus <code>.PNG</code> asset references.</li>
+<li>Removed mousewheel camera zoom during startup changes.</li>
+<li>Commits: <code>a79e583</code> → <code>c54986e</code>.</li>
+</ul>
+<h2 id="january-24-25-2026-story-additions">January 24–25, 2026 — weekend game jam</h2>
+<ul>
+<li>Participated in a weekend-long game jam during the January 2026 snowstorm.</li>
+<li>The January 24–26 work below was part of that game-jam effort.</li>
+<li>Added story content.</li>
+<li>Commits: <code>a9cad59</code> → <code>43aa005</code>.</li>
+</ul>
+<h2 id="january-25-2026-loading-and-simulation-state">January 25, 2026 — loading and simulation state</h2>
+<ul>
+<li>Integrated startup flow before entering the game.</li>
+<li>Preloaded images while the world loaded.</li>
+<li>Loaded the entire world over a tethered cellphone connection during the snowstorm.</li>
+<li>Waited for prewarming before signaling readiness; intended to support slow networks.</li>
+<li>Added death/respawn state, saved spawn</li>
+<li>Tagged collision support types so branches could trigger a separate hazard.</li>
+<li>Commits: <code>b535727</code> → <code>fade44e</code>.</li>
+</ul>
+<h2 id="january-26-2026-audio-and-cleanup">January 26, 2026 — audio and cleanup</h2>
+<ul>
+<li>Preloaded audio bytes; initialized Web Audio later in the start flow.</li>
+<li>Recorded myself crunching through the snow and used those recordings for the footsteps.</li>
+<li>Added walking footsteps with cadence, sample variation, and pitch variation.</li>
+<li>Added looping music on the initial user gesture.</li>
+<li>Fixed a preload path to use cached image URLs.</li>
+<li>Removed a duplicate footstep helper.</li>
+<li>Large formatting commit mostly reorganized existing code.</li>
+<li>Commits: <code>07f0d58</code> → <code>3a8b798</code>.</li>
+</ul>
+<h2 id="superfuture">Between January and September — SuperFutureTheLostUtopia</h2>
+<ul>
+<li>Refined rounded hills and more convincing mountains.</li>
+<li>Added day/night lighting with moving shadows and highlights.</li>
+<li>Expanded animated 3D asset use; GLB support already existed in January.</li>
+<li>Studied and developed more convincing procedural Douglas firs.</li>
+<li>Carried this implementation into Siegress.</li>
+<li>Based on my recollection; exact dates and commits are unavailable.</li>
+</ul>
+<h2 id="september">September 8–9, 2026 — Siegress import and map geometry</h2>
+<ul>
+<li>Imported the accumulated game: 5,776 lines in the main HTML file.</li>
+<li>Already included procedural firs, instancing, terrain, collision, camera, loading, and audio.</li>
+<li>Replaced fixed site walls with geometry fitted from map pixels.</li>
+<li>Used seeded randomized line fitting, inlier scoring, and fallback geometry.</li>
+<li>Derived exclusion zones and spawn regions from map data.</li>
+<li>Revised wall tracing to handle disconnected paths.</li>
+<li>Commits: <code>6294aa6</code> → <code>832d1ed</code>.</li>
+</ul>
+<h2 id="september-13-14-2026-wall-camera-and-terrain-corrections">September 13–14, 2026 — wall, camera, and terrain corrections</h2>
+<ul>
+<li>Resampled seawalls at roughly 20 world-unit spacing.</li>
+<li>Added segment overlap, deeper embedding, and a larger collision buffer.</li>
+<li>Replaced camera lifting with an eight-step search along the camera boom.</li>
+<li>Earlier camera correction changed the intended look-up angle.</li>
+<li>Added custom terrain shading with screen-space dithering.</li>
+<li>Changed the map to clean up geometry and address island visibility, according to the commit message.</li>
+<li>Commits: <code>e75f375</code> → <code>becb707</code>.</li>
+</ul>
+<h2 id="september-14-15-2026-incremental-modularization">September 14–15, 2026 — incremental modularization</h2>
+<ul>
+<li>Used GPT Work Mode (an agentic workflow) to suggest how to make the code more atomic.</li>
+<li>Kept a checklist of planned modules in the code and checked them off one at a time.</li>
+<li>The checklist let me pick up where I left off when GPT Work Mode reached its compute limits.</li>
+<li>Extracted 15 systems one at a time.</li>
+<li>Split audio, preloading, developer console, startup UI, and materials into modules.</li>
+<li>Split terrain, water, trees, site walls, and seawalls into modules.</li>
+<li>Split collision, camera, and animated asset systems into modules.</li>
+<li>Passed dependencies and changing state through factory options and getters.</li>
+<li>Reduced terrain processing passes and loaded the hosting plugin only for builds.</li>
+<li>Moved large asset loading off the initial readiness path.</li>
+<li>Loaded animation assets concurrently and disposed superseded objects.</li>
+<li>Main HTML still owned movement, hazards, world assembly, and the loop.</li>
+<li>Commits: <code>b8ae3b9</code> → <code>3f1dcf8</code>.</li>
+</ul>
+<h2 id="september-16-2026-fallbacks-and-interacting-runtime-states">September 16, 2026 — fallbacks and interacting runtime states</h2>
+<ul>
+<li>Showed a bounding rectangular prism when the monster or player GLB models were unavailable.</li>
+<li>Added a timed meter, threshold-based slowdown, and a timed reset interaction.</li>
+<li>Coordinated UI, camera mode, movement restrictions, and respawn resets.</li>
+<li>Added pursuit with different acquisition/loss radii and short tracking memory.</li>
+<li>Used camera projection and terrain raycasts to check visibility before repositioning.</li>
+<li>Pursuit used direct targeting and local collision handling; no pathfinding system.</li>
+<li>Commits: <code>242d9a6</code> → <code>d6bfe4a</code>.</li>
+</ul>
+<h2 id="september-23-24-2026-rendering-and-reusable-geometry">September 23–24, 2026 — rendering and reusable geometry</h2>
+<ul>
+<li>Added modular ambient effects and billboard rendering.</li>
+<li>Disambiguated overlapping map-marker colors during wall extraction.</li>
+<li>Replaced animated canvas title rendering with a static image.</li>
+<li>Reused tree geometry and boundary behavior for the giant tower on top of one of the mountains.</li>
+<li>Added the tower’s collision shape and pulsing light effect.</li>
+<li>Revised spawn-marker semantics.</li>
+<li>Commits: <code>f8560c2</code> → <code>1bb61fd</code>.</li>
+</ul>
+<h2 id="september-25-2026-traversal-editing-and-support-geometry">September 25, 2026 — traversal, editing, and support geometry</h2>
+<ul>
+<li>Estimated terrain gradient using central differences.</li>
+<li>Applied a 0.25 movement multiplier above a 45-degree slope threshold.</li>
+<li>Shared traversal rules across moving entities.</li>
+<li>Added a speedometer based on actual displacement.</li>
+<li>Added real-time road making in the world, with undo, to update map.png.</li>
+<li>Laid out roads by feeling out what the hills, valleys, and slopes allowed, avoiding labor-intensive guess-and-check edits to map.png.</li>
+<li>Made sloped wall rendering agree with interpolated collision-top heights.</li>
+<li>Used previous position to handle landing, jumping off, and leaving wall edges.</li>
+<li>Fixed a wall-edge collision response that shoved the player away.</li>
+<li>Made the camera follow jumping and elevated support.</li>
+<li>Added terrain-conforming mound geometry and fatal-fall tracking.</li>
+<li>Commits: <code>40ceaf5</code> → <code>3e2edbc</code>.</li>
+</ul>
+<h2 id="september-26-2026-explicit-support-colliders-and-layered-map-data">September 26, 2026 — explicit support colliders and layered map data</h2>
+<ul>
+<li>Replaced the mound’s terrain-height override with separate structure geometry and a roof collider.</li>
+<li>Preserved elevated spawn height during respawn.</li>
+<li>Encoded eight jetty levels with map colors.</li>
+<li>Instanced blocks by level; combined consecutive pixels into platform colliders.</li>
+<li>Restored underlying world data from a baseline image where markers overwrote terrain/water.</li>
+<li>Reconstructed terrain under markers with inverse-distance weighting.</li>
+<li>Reduced sprint from 80 to 9 m/s; raised fatal-fall threshold from 8.5 to 10.2 units.</li>
+<li>Commit: <code>c332147</code>.</li>
+</ul>
+<h2 id="lessons">What I would revisit</h2>
+<ul>
+<li>Separate terrain, water, and object metadata into distinct layers.</li>
+<li>Extract movement, hazards, and world orchestration from the main HTML.</li>
+<li>Add repeatable checks for wall edges, jumping, landing, and elevated respawns.</li>
+<li>Measure loading and frame costs before claiming performance improvements.</li>
+<li>Make loading failures and save failures visible and recoverable.</li>
+</ul>
+<h2 id="evidence">Evidence</h2>
+<ul>
+<li>55 inspected commits: 26 in MegaFuture232; 29 in Siegress.</li>
+<li>January and September dates are verified Git author dates in New York time.</li>
+<li>Imported baselines establish existing features, not their original creation dates.</li>
+<li>Earlier and intervening phases are recollections; no missing rationale is invented.</li>
+<li>Source review completed October 3, 2026; no runtime performance measurements.</li>
+<li>Repositories: <a href="https://github.com/mcdowellj87/MegaFuture232">MegaFuture232</a> · <a href="https://github.com/mcdowellj87/Siegress">Siegress</a>.</li>
+</ul>
+
+</main><footer>Siegress · Developer Notes · History reviewed October 3, 2026</footer>
+</body></html>
